@@ -764,6 +764,15 @@ Sistem mora pošiljati naslednje avtomatizirane e-poštne obvestila:
 
 ---
 
+
+## Diagram primerov uporabe
+
+<p align="center">
+  <img src="diagram.png" alt="Use case diagram" width="1000">
+</p>
+
+---
+
 ## 6. Reference
 
 1. **IEEE Std 830-1998** — IEEE Recommended Practice for Software Requirements Specifications
