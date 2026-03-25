@@ -773,6 +773,14 @@ Sistem mora pošiljati naslednje avtomatizirane e-poštne obvestila:
 
 ---
 
+
+## Funkcionalna dekompozicija
+
+<p align="center">
+  <img src="fundediag.png" alt="Funkcionalna dekompozicija" width="1000">
+</p>
+
+---
 ## 6. Reference
 
 1. **IEEE Std 830-1998** — IEEE Recommended Practice for Software Requirements Specifications
