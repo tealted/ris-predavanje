@@ -5,6 +5,7 @@
 
 | Atribut | Vrednost |
 |---|---|
+| **Avtor** | Daniil Sydorchuk |
 | **Verzija dokumenta** | 1.0 |
 | **Datum** | 2026-03-25 |
 | **Status** | Osnutek |
