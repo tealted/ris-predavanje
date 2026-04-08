@@ -765,7 +765,7 @@ Sistem mora pošiljati naslednje avtomatizirane e-poštne obvestila:
 ---
 
 
-## Diagram primerov uporabe
+## 6. Diagram primerov uporabe
 
 <p align="center">
   <img src="diagram.png" alt="Use case diagram" width="1000">
@@ -774,14 +774,194 @@ Sistem mora pošiljati naslednje avtomatizirane e-poštne obvestila:
 ---
 
 
-## Funkcionalna dekompozicija
+## 7. Funkcionalna dekompozicija
 
 <p align="center">
   <img src="fundediag.png" alt="Funkcionalna dekompozicija" width="1000">
 </p>
 
+
+
 ---
-## 6. Reference
+
+## 8. Opis modela
+
+### 8.1. Ključne entitete
+
+**CLANI** je osrednja entiteta sistema. Hrani osebne podatke člana (ime, priimek, email, naslov, datum rojstva), membership ID v obliki `MST-XXXXXXXX`, trenutni status ter skupno stanje točk. Ločena od uporabniškega računa zaradi GDPR zahtev (TR-SEC-05).
+
+**UPORABNISKE_RACUNE** hrani izključno avtentikacijske podatke — bcrypt hash gesla (faktor ≥ 12 kot zahteva TR-SEC-01), status verifikacije emaila, čas in IP verifikacije ter datum zaklenjenosti računa (po 5 neuspešnih poskusih, FR-REG-03).
+
+**KARTICE_LOJALNOSTI** predstavlja fizično kartico z unikatno številko, datumom izdaje in datumom pošiljanja po pošti (FR-REG-01).
+
+**STATUSI_CLANOV** beleži celotno zgodovino statusnih sprememb — vsak prehod med statusi (osnovni → srebrni itd.) z razlogom in časovnim žigom. Nujno za FR-ADM-01 (pregled za poljubno obdobje) in revizijsko sled.
+
+**MESECNI_NAKUPI** hrani agregate zneskov, uvožene iz poslovnega IS (IF-BIS-01). Vsebuje membership ID, leto, mesec, skupni znesek in čas uvoza. Ni vezana na posamezne blagajniške račune.
+
+**PRAVILA_TOCK** je konfigurabilna tabela točkovnika — za vsako kombinacijo statusa in razreda zneska hrani število točk. Spremenljiva prek administrativnega vmesnika brez posega v kodo (FR-PTS-01, TR-MNT-01). Podpira veljavnost (`valid_from`/`valid_to`) za zgodovino sprememb.
+
+**PRAVILA_STATUSOV** hrani mejne vrednosti za prehajanje med statusi (499 EUR, 200 EUR, 500 EUR, 50 EUR itd.) kot nastavljive parametre (FR-STS-08). Vsaka vrednost ima ime parametra, vrednost in opis.
+
+**TRANSAKCIJE_TOCK** beleži vsako dodelitev in koriščenje točk — vrsta (`DODELITEV`/`KORIŠČENJE`), število točk, status ob dodelitvi, referenca na mesečni nakup ali nagrado. Skupno stanje točk je derivirano iz te tabele (FR-PTS-03).
+
+**NAGRADE** je katalog nagrad z imenom, opisom, potrebnimi točkami, zalogo in statusom aktivnosti (FR-ADM-04). Podpira veljavnost nagrade.
+
+**REVIZIJSKA_SLED** evidentira vse administrativne akcije in spremembe pravil — kdo, kdaj, kaj je spremenil (stara/nova vrednost). Zahtevano z FR-ADM-05 in TR-MNT-02, hranjeno vsaj 12 mesecev.
+
+---
+
+### 8.2. Odnosi med entitetami
+
+| Od | Do | Kardinalnost | Opis |
+|---|---|---|---|
+| CLANI | UPORABNISKE_RACUNE | 1 : 1 | Vsak član ima natanko en račun |
+| CLANI | KARTICE_LOJALNOSTI | 1 : 1 | Vsak član ima natanko eno kartico |
+| CLANI | STATUSI_CLANOV | 1 : N | Polna statusna zgodovina člana |
+| CLANI | MESECNI_NAKUPI | 1 : N | Mesečni agregati nakupov po članu |
+| CLANI | TRANSAKCIJE_TOCK | 1 : N | Vse dodelitve in koriščenja točk |
+| TRANSAKCIJE_TOCK | PRAVILA_TOCK | N : 1 (opcijsko) | Vsaka dodelitev po enem pravilu točkovanja |
+| TRANSAKCIJE_TOCK | NAGRADE | N : 1 (opcijsko) | Pri koriščenju vezano na nagrado |
+| REVIZIJSKA_SLED | CLANI | N : 1 (opcijsko) | Evidentira spremembe vezane na člana |
+
+---
+
+### 8.3. Posebnosti modela
+
+- **Pravila v bazi, ne v kodi** — tabeli `PRAVILA_TOCK` in `PRAVILA_STATUSOV` imata `veljavnost_od`/`veljavnost_do`, kar omogoča sledenje zgodovini sprememb in retroaktivno analizo.
+- **Status pred točkami** — tabela `TRANSAKCIJE_TOCK` hrani `status_ob_izracunu`, ker se status določi **pred** dodelitvijo točk (FR-STS-07). Kritično za pravilno revizijo.
+- **Oracle-kompatibilni tipi** — `NUMBER`, `VARCHAR2`, `DATE`, `CHAR` v skladu z zahtevo TR-TECH-01.
+- **Skalabilnost** — particioniranje predvideno na `MESECNI_NAKUPI` in `TRANSAKCIJE_TOCK` po letu/mesecu (TR-PER-04).
+- **GDPR** — osebni podatki so v `CLANI`, ločeni od avtentikacijskih podatkov v `UPORABNISKE_RACUNE`. Podpira pravico do pozabe (TR-SEC-05).
+- **Večjezičnost** — atribut `jezik` v `CLANI` hrani jezikovno nastavitev člana (i18n, TR-MNT-03).
+
+---
+
+## 8.4. Konceptualni diagram (Mermaid ERD)
+
+```mermaid
+erDiagram
+  CLANI ||--|| UPORABNISKE_RACUNE : "ima račun"
+  CLANI ||--|| KARTICE_LOJALNOSTI : "ima kartico"
+  CLANI ||--o{ STATUSI_CLANOV : "statusna zgodovina"
+  CLANI ||--o{ MESECNI_NAKUPI : "mesečni nakupi"
+  CLANI ||--o{ TRANSAKCIJE_TOCK : "transakcije točk"
+  TRANSAKCIJE_TOCK }o--o| PRAVILA_TOCK : "po pravilu točkovanja"
+  TRANSAKCIJE_TOCK }o--o| NAGRADE : "za nagrado"
+  REVIZIJSKA_SLED }o--o| CLANI : "evidentira spremembe"
+
+  CLANI {
+    NUMBER clan_id PK
+    VARCHAR2 membership_id
+    VARCHAR2 ime
+    VARCHAR2 priimek
+    VARCHAR2 email
+    VARCHAR2 naslov
+    DATE datum_rojstva
+    DATE datum_vclanitve
+    VARCHAR2 trenutni_status
+    NUMBER skupne_tocke
+    VARCHAR2 jezik
+  }
+
+  UPORABNISKE_RACUNE {
+    NUMBER racun_id PK
+    NUMBER clan_id FK
+    VARCHAR2 geslo_hash
+    CHAR je_verificiran
+    DATE verificiran_ob
+    VARCHAR2 verif_ip
+    NUMBER neuspesni_poskusi
+    DATE zakljenjen_do
+    DATE ustvarjen_ob
+  }
+
+  KARTICE_LOJALNOSTI {
+    NUMBER kartica_id PK
+    NUMBER clan_id FK
+    VARCHAR2 stevilka_kartice
+    DATE datum_izdaje
+    DATE datum_posiljanja
+    CHAR je_aktivna
+  }
+
+  STATUSI_CLANOV {
+    NUMBER status_id PK
+    NUMBER clan_id FK
+    VARCHAR2 status_nivo
+    DATE veljavnost_od
+    DATE veljavnost_do
+    VARCHAR2 razlog_spremembe
+    NUMBER mesecni_nakup_eur
+  }
+
+  MESECNI_NAKUPI {
+    NUMBER nakup_id PK
+    NUMBER clan_id FK
+    NUMBER leto
+    NUMBER mesec
+    NUMBER skupni_znesek_eur
+    DATE uvozeno_ob
+    VARCHAR2 vir
+  }
+
+  PRAVILA_TOCK {
+    NUMBER pravilo_id PK
+    VARCHAR2 status_nivo
+    NUMBER znesek_od
+    NUMBER znesek_do
+    NUMBER stevilo_tock
+    DATE veljavnost_od
+    DATE veljavnost_do
+    CHAR je_aktivno
+  }
+
+  PRAVILA_STATUSOV {
+    NUMBER pravilo_id PK
+    VARCHAR2 ime_parametra
+    NUMBER vrednost_eur
+    VARCHAR2 opis
+    DATE veljavnost_od
+    DATE veljavnost_do
+  }
+
+  TRANSAKCIJE_TOCK {
+    NUMBER transakcija_id PK
+    NUMBER clan_id FK
+    VARCHAR2 vrsta
+    NUMBER stevilo_tock
+    DATE datum
+    NUMBER pravilo_id FK
+    NUMBER nakup_id FK
+    NUMBER nagrada_id FK
+    VARCHAR2 status_ob_izracunu
+    VARCHAR2 opomba
+  }
+
+  NAGRADE {
+    NUMBER nagrada_id PK
+    VARCHAR2 naziv
+    VARCHAR2 opis
+    NUMBER potrebne_tocke
+    NUMBER zaloga
+    CHAR je_aktivna
+    DATE veljavnost_od
+    DATE veljavnost_do
+  }
+
+  REVIZIJSKA_SLED {
+    NUMBER revizija_id PK
+    NUMBER clan_id FK
+    VARCHAR2 tip_akcije
+    VARCHAR2 tabela
+    VARCHAR2 stara_vrednost
+    VARCHAR2 nova_vrednost
+    VARCHAR2 izvajalec
+    DATE cas_akcije
+    VARCHAR2 ip_naslov
+  }
+```
+---
+## 9. Reference
 
 1. **IEEE Std 830-1998** — IEEE Recommended Practice for Software Requirements Specifications
 2. **ISO/IEC/IEEE 29148:2018** — Systems and software engineering: Life cycle processes – Requirements engineering
