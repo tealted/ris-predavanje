@@ -17,26 +17,35 @@
 
 1. [Kratek opis sistema](#1-kratek-opis-sistema)
 2. [Funkcionalne zahteve](#2-funkcionalne-zahteve)
-   - 2.1 Registracija in upravljanje članov
-   - 2.2 Izračun točk zvestobe
-   - 2.3 Upravljanje statusov
-   - 2.4 Strankarski portal
-   - 2.5 Administrativni portal
-   - 2.6 Integracija s poslovnim IS
+   - 2.1 [Registracija in upravljanje članov](#21-registracija-in-upravljanje-clanov)
+   - 2.2 [Izračun točk zvestobe](#22-izracun-tock-zvestobe)
+   - 2.3 [Upravljanje statusov](#23-upravljanje-statusov)
+   - 2.4 [Strankarski portal](#24-strankarski-portal)
+   - 2.5 [Administrativni portal](#25-administrativni-portal)
+   - 2.6 [Integracija s poslovnim IS](#26-integracija-s-poslovnim-is)
 3. [Tehnične zahteve](#3-tehnicne-zahteve)
-   - 3.1 Zmogljivost in razširljivost
-   - 3.2 Varnost
-   - 3.3 Zanesljivost in razpoložljivost
-   - 3.4 Vzdrževanje in prilagodljivost
-   - 3.5 Tehnološki sklad
+   - 3.1 [Zmogljivost in razširljivost](#31-zmogljivost-in-razsirljivost)
+   - 3.2 [Varnost](#32-varnost)
+   - 3.3 [Zanesljivost in razpoložljivost](#33-zanesljivost-in-razpolozljivost)
+   - 3.4 [Vzdrževanje in prilagodljivost](#34-vzdrzevanje-in-prilagodljivost)
+   - 3.5 [Tehnološki sklad](#35-tehnoloski-sklad)
 4. [Vmesniki](#4-vmesniki)
-   - 4.1 Uporabniški vmesnik
-   - 4.2 Programski vmesnik (API)
-   - 4.3 Vmesnik s podatkovno bazo
-   - 4.4 Vmesnik s poslovnim IS
-   - 4.5 Vmesniki za obveščanje
+   - 4.1 [Uporabniški vmesnik (UI)](#41-uporabniski-vmesnik-ui)
+   - 4.2 [Programski vmesnik (API)](#42-programski-vmesnik-api)
+   - 4.3 [Vmesnik s podatkovno bazo](#43-vmesnik-s-podatkovno-bazo)
+   - 4.4 [Vmesnik s poslovnim IS](#44-vmesnik-s-poslovnim-is)
+   - 4.5 [Vmesniki za obveščanje](#45-vmesniki-za-obvescanje)
 5. [Slovar izrazov](#5-slovar-izrazov)
-6. [Reference](#6-reference)
+6. [Diagram primerov uporabe](#6-diagram-primerov-uporabe)
+7. [Funkcionalna dekompozicija](#7-funkcionalna-dekompozicija)
+8. [Opis modela](#8-opis-modela)
+   - 8.1 [Ključne entitete](#81-kljucne-entitete)
+   - 8.2 [Odnosi med entitetami](#82-odnosi-med-entitetami)
+   - 8.3 [Posebnosti modela](#83-posebnosti-modela)
+   - 8.4 [Konceptualni diagram (Mermaid ERD)](#84-konceptualni-diagram-mermaid-erd)
+9. [Zaslonske maske](#9-zaslonske-maske)
+10. [Sledljivost zahtev → funkcije → zaslonske maske → tabele podatkovnega modela](#10-sledljivost-zahtev--funkcije--zaslonske-maske--tabele-podatkovnega-modela)
+11. [Reference](#11-reference)
 
 ---
 
@@ -55,7 +64,7 @@ Sistem se integrira z obstoječim poslovnim informacijskim sistemom (IS) trgovsk
 
 ### 1.2 Kontekst sistema
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────────┐
 │                      IS Lojalnost Maestro                       │
 │                                                                 │
@@ -67,30 +76,30 @@ Sistem se integrira z obstoječim poslovnim informacijskim sistemom (IS) trgovsk
 │  └──────────┬───────────┘    └───────────────┬───────────────┘  │
 │             │                                │                   │
 │  ┌──────────▼────────────────────────────────▼───────────────┐  │
-│  │                 Aplikacijski strežnik                      │  │
-│  │       (Poslovna logika, pravila, izračuni točk)            │  │
+│  │                 Aplikacijski strežnik                     │  │
+│  │       (Poslovna logika, pravila, izračuni točk)           │  │
 │  └──────────────────────────┬────────────────────────────────┘  │
 │                             │                                    │
 │  ┌──────────────────────────▼────────────────────────────────┐  │
-│  │                Oracle podatkovna baza                      │  │
+│  │                Oracle podatkovna baza                     │  │
 │  └───────────────────────────────────────────────────────────┘  │
 └──────────────────────────────┬──────────────────────────────────┘
                                │ API
                ┌───────────────▼───────────────┐
-               │       Poslovni IS Maestro      │
-               │   (Podatki o nakupih strank)   │
+               │       Poslovni IS Maestro     │
+               │   (Podatki o nakupih strank)  │
                └───────────────────────────────┘
 ```
 
 ### 1.3 Ključne značilnosti
 
-- **Večnivojski status** (osnovni → bronasti → srebrni → zlati) z dinamičnim prehajanjem
+- **Večnivojski status** (Osnovni → Bronasti → Srebrni → Zlati) z dinamičnim prehajanjem
 - **Mesečni izračun točk** na podlagi zneska nakupov in trenutnega statusa stranke
-- **Spletna registracija** z varno verifikacijo e-naslova
+- **Spletna registracija** z varno verifikacijo e-poštnega naslova
 - **Večjezična podpora** (slovenščina in angleščina)
 - **Skalabilnost** za 500.000+ uporabnikov z možnostjo mednarodne razširitve
 - **Oracle podatkovna baza** kot osnova za persistenco podatkov
-- **Fleksibilna pravila** — administratorji lahko prilagajajo vrednosti točkovnika in mejna vrednosti statusov brez poseganja v kodo
+- **Fleksibilna pravila** — administratorji lahko prilagajajo vrednosti točkovnika in mejne vrednosti statusov brez poseganja v kodo
 
 ### 1.4 Ciljni uporabniki
 
@@ -120,13 +129,15 @@ Sistem se integrira z obstoječim poslovnim informacijskim sistemom (IS) trgovsk
 - Datum rojstva
 - E-poštni naslov
 - Naslov za dostavo kartice (ulica, poštna številka, kraj, država)
+- Telefonska številka
 - Geslo (z zahtevami za moč gesla)
 - Privolitev v pogoje programa (GDPR)
+- Izbira jezika portala
 
 **Obdelava:**
-1. Sistem preveri, da e-naslov še ni registriran v sistemu.
+1. Sistem preveri, da e-poštni naslov še ni registriran v sistemu.
 2. Sistem ustvari neaktivni račun in pošlje e-poštno sporočilo z aktivacijsko povezavo.
-3. Po kliku na aktivacijsko povezavo (veljavnost 24 ur) se račun aktivira.
+3. Po kliku na aktivacijsko povezavo z veljavnostjo 24 ur se račun aktivira.
 4. Sistem ustvari enoličen identifikator člana (membership ID).
 5. Sistem sproži postopek tiskanja in pošiljanja kartice lojalnosti na navedeni naslov.
 
@@ -136,21 +147,21 @@ Sistem se integrira z obstoječim poslovnim informacijskim sistemom (IS) trgovsk
 - Kartica lojalnosti poslana po navadni pošti
 
 **Omejitve:**
-- En e-naslov = en račun (sistem zavrne podvojene e-naslove)
+- En e-poštni naslov = en račun
 - Aktivacijska povezava poteče v 24 urah
 
 **Prioriteta:** Visoka
 
 ---
 
-#### FR-REG-02 — Verifikacija e-naslova
+#### FR-REG-02 — Verifikacija e-poštnega naslova
 
-**Opis:** Sistem mora zagotoviti, da se stranka ne more registrirati z e-naslovom, ki ni njen.
+**Opis:** Sistem mora zagotoviti, da se stranka ne more registrirati z e-poštnim naslovom, ki ni njen.
 
 **Obdelava:**
-1. Po vnosu e-naslova sistem pošlje verifikacijsko e-pošto z unikatnim žetonom (token).
+1. Po vnosu e-poštnega naslova sistem pošlje verifikacijsko e-pošto z unikatnim žetonom.
 2. Račun ostane neaktiven, dokler stranka ne klikne na verifikacijsko povezavo.
-3. Žeton je enkratno-uporaben in kriptografsko podpisan (npr. JWT ali HMAC).
+3. Žeton je enkratno uporaben in kriptografsko podpisan.
 4. Sistem beleži čas in IP naslov verifikacije.
 
 **Prioriteta:** Visoka
@@ -159,11 +170,11 @@ Sistem se integrira z obstoječim poslovnim informacijskim sistemom (IS) trgovsk
 
 #### FR-REG-03 — Prijava v sistem
 
-**Opis:** Sistem mora omogočati prijavo članu s kombinacijo e-naslova in gesla.
+**Opis:** Sistem mora omogočati prijavo članu s kombinacijo e-poštnega naslova in gesla.
 
 **Obdelava:**
-1. Sistem preveri veljavnost kombinacije e-naslov + geslo (bcrypt hash primerjava).
-2. Po uspešni prijavi sistem ustvari sejni žeton (JWT).
+1. Sistem preveri veljavnost kombinacije e-poštni naslov + geslo z bcrypt primerjavo.
+2. Po uspešni prijavi sistem ustvari sejni žeton JWT.
 3. Po 5 neuspešnih poskusih sistem začasno zaklene račun za 15 minut.
 
 **Prioriteta:** Visoka
@@ -174,8 +185,15 @@ Sistem se integrira z obstoječim poslovnim informacijskim sistemom (IS) trgovsk
 
 **Opis:** Član mora imeti možnost posodobitve svojih osebnih podatkov.
 
-**Spremenljivi podatki:** naslov, telefonska številka, nastavitve obveščanja.  
-**Nespremenljivi podatki:** e-naslov (zahteva posebni postopek), datum rojstva.
+**Spremenljivi podatki:**
+- naslov
+- telefonska številka
+- nastavitve obveščanja
+- jezik portala
+
+**Nespremenljivi podatki:**
+- e-poštni naslov (zahteva posebni postopek)
+- datum rojstva
 
 **Prioriteta:** Srednja
 
@@ -183,7 +201,7 @@ Sistem se integrira z obstoječim poslovnim informacijskim sistemom (IS) trgovsk
 
 #### FR-REG-05 — Pozabljeno geslo
 
-**Opis:** Sistem mora ponuditi možnost ponastavitve gesla prek e-naslova.
+**Opis:** Sistem mora ponuditi možnost ponastavitve gesla prek e-poštnega naslova.
 
 **Obdelava:** Sistem pošlje enkratno povezavo za ponastavitev gesla, veljavno 1 uro.
 
@@ -195,27 +213,28 @@ Sistem se integrira z obstoječim poslovnim informacijskim sistemom (IS) trgovsk
 
 #### FR-PTS-01 — Mesečni izračun točk
 
-**Opis:** Sistem mora enkrat mesečno (za pretekli mesec) izračunati točke zvestobe za vsakega aktivnega člana.
+**Opis:** Sistem mora enkrat mesečno za pretekli mesec izračunati točke zvestobe za vsakega aktivnega člana.
 
-**Vhodi:** Skupni znesek nakupov člana v preteklem mesecu (iz poslovnega IS), trenutni status člana.
+**Vhodi:**
+- Skupni znesek nakupov člana v preteklem mesecu iz poslovnega IS
+- Trenutni status člana
 
 **Obdelava:**
-
-1. Sistem najprej posodobi status stranke (gl. FR-STS-*).
+1. Sistem najprej posodobi status stranke.
 2. Nato dodeli točke po naslednji tabeli:
 
 | Znesek nakupov | Status: Osnovni | Status: Bronasti | Status: Srebrni | Status: Zlati |
-|---|---|---|---|---|
+|---|---:|---:|---:|---:|
 | Do 200 EUR | 5 točk | 0 točk | 7,5 točk | 10 točk |
-| 200 EUR – 1.000 EUR | 10 točk | 5 točk | 15 točk | 20 točk |
-| Nad 1.000 EUR | 20 točk | 10 točk | 30 točk | 40 točk |
+| Več kot 200 EUR do 1.000 EUR | 10 točk | 5 točk | 15 točk | 20 točk |
+| Več kot 1.000 EUR | 20 točk | 10 točk | 30 točk | 40 točk |
 
-3. Sistem beleži vsak dodelitev točk z datumom, zneskom nakupov in statusom.
-4. Točke se seštejejo k skupnemu stanju točk na računu.
+3. Sistem beleži vsako dodelitev točk z datumom, zneskom nakupov in statusom.
+4. Točke se prištejejo k skupnemu stanju točk na računu.
 
 **Omejitve:**
 - Vrednosti v tabeli morajo biti spremenljive s strani administratorja brez posega v kodo.
-- Mejne vrednosti zneskov (200 EUR, 1.000 EUR) morajo biti prav tako nastavljive.
+- Mejne vrednosti zneskov morajo biti prav tako nastavljive.
 
 **Prioriteta:** Visoka
 
@@ -225,14 +244,18 @@ Sistem se integrira z obstoječim poslovnim informacijskim sistemom (IS) trgovsk
 
 **Opis:** Član mora imeti možnost koriščenja zbranih točk za nagrade iz kataloga nagrad.
 
-**Vhodi:** Izbrana nagrada iz kataloga, zadostno stanje točk.
+**Vhodi:**
+- Izbrana nagrada iz kataloga
+- Zadostno stanje točk
 
 **Obdelava:**
 1. Sistem preveri, ali ima član dovolj točk za izbrano nagrado.
 2. Sistem odšteje ustrezno število točk in evidentira transakcijo koriščenja.
-3. Sistem sproži postopek za zagotovitev nagrade (digitalna ali fizična nagrada).
+3. Sistem sproži postopek za zagotovitev nagrade.
 
-**Izhodi:** Potrditev koriščenja, posodobljeno stanje točk.
+**Izhodi:**
+- Potrditev koriščenja
+- Posodobljeno stanje točk
 
 **Prioriteta:** Visoka
 
@@ -242,7 +265,12 @@ Sistem se integrira z obstoječim poslovnim informacijskim sistemom (IS) trgovsk
 
 **Opis:** Član mora imeti pregled celotne zgodovine pridobivanja in koriščenja točk.
 
-**Prikazani podatki:** datum, vrsta transakcije (pridobitev/koriščenje), število točk, opis, skupno stanje.
+**Prikazani podatki:**
+- datum
+- vrsta transakcije (pridobitev ali koriščenje)
+- število točk
+- opis
+- skupno stanje
 
 **Prioriteta:** Srednja
 
@@ -260,9 +288,9 @@ Sistem se integrira z obstoječim poslovnim informacijskim sistemom (IS) trgovsk
 
 #### FR-STS-02 — Prehod v status Srebrni
 
-**Opis:** Ko stranka prvič preseže znesek nakupov **499 EUR** v enem mesecu, pridobi status **Srebrni**.
+**Opis:** Ko stranka prvič doseže mesečni znesek nakupov **vsaj 500 EUR**, pridobi status **Srebrni**.
 
-**Pogoj:** Znesek nakupov v tekočem mesecu > 499 EUR IN stranka še nima statusa Srebrni ali višje.
+**Pogoj:** Znesek nakupov v tekočem mesecu >= 500 EUR in stranka še nima statusa Srebrni ali višje.
 
 **Prioriteta:** Visoka
 
@@ -270,9 +298,9 @@ Sistem se integrira z obstoječim poslovnim informacijskim sistemom (IS) trgovsk
 
 #### FR-STS-03 — Prehod v status Zlati
 
-**Opis:** Ko stranka s statusom Srebrni še **dvakrat** preseže 500 EUR v enem mesecu, pridobi status **Zlati**.
+**Opis:** Ko stranka s statusom Srebrni še **dvakrat** doseže mesečni znesek nakupov **vsaj 500 EUR**, pridobi status **Zlati**.
 
-**Pogoj:** Stranka ima status Srebrni IN je vsaj dvakrat (ne nujno zaporedoma) v mesecih po pridobitvi Srebrnega statusa presegla 500 EUR.
+**Pogoj:** Stranka ima status Srebrni in je vsaj dvakrat v mesecih po pridobitvi Srebrnega statusa dosegla znesek >= 500 EUR.
 
 **Prioriteta:** Visoka
 
@@ -293,8 +321,8 @@ Sistem se integrira z obstoječim poslovnim informacijskim sistemom (IS) trgovsk
 **Opis:** Za ohranitev statusa Zlati mora mesečni znesek nakupov znašati vsaj **500 EUR**.
 
 **Posledica neizpolnitve:**
-- Ob prvem mesecu brez pogoja → stranka ohrani Zlati status (opozorilo).
-- Ob drugem mesecu brez pogoja → stranka prejme status **Srebrni**.
+- Ob prvem mesecu brez izpolnjenega pogoja stranka ohrani Zlati status in prejme opozorilo.
+- Ob drugem zaporednem mesecu brez izpolnjenega pogoja stranka prejme status **Srebrni**.
 
 **Prioriteta:** Visoka
 
@@ -304,8 +332,8 @@ Sistem se integrira z obstoječim poslovnim informacijskim sistemom (IS) trgovsk
 
 **Opis:** Stranka v statusu **Bronasti** ostane, dokler ne izpolni enega od naslednjih pogojev:
 
-- **Dva zaporedna meseca** z nakupi ≥ 200 EUR → stranka pridobi status **Srebrni**.
-- **Nakup pod 50 EUR** v kateremkoli mesecu → stranka se vrne v status **Osnovni**.
+- dva zaporedna meseca z nakupi >= 200 EUR → stranka pridobi status **Srebrni**
+- mesečni nakup < 50 EUR → stranka se vrne v status **Osnovni**
 
 **Prioriteta:** Visoka
 
@@ -318,7 +346,7 @@ Sistem se integrira z obstoječim poslovnim informacijskim sistemom (IS) trgovsk
 **Zaporedje:**
 1. Pridobi znesek nakupov za pretekli mesec.
 2. Posodobi status stranke glede na pravila prehajanja.
-3. Dodeli točke glede na **novi** (posodobljeni) status.
+3. Dodeli točke glede na novi status.
 
 **Prioriteta:** Visoka
 
@@ -328,12 +356,12 @@ Sistem se integrira z obstoječim poslovnim informacijskim sistemom (IS) trgovsk
 
 **Opis:** Mejne vrednosti za prehajanje med statusi morajo biti nastavljive prek administrativnega vmesnika brez posega v aplikacijsko kodo.
 
-**Nastavljivi parametri (primeri):**
-- Minimalni znesek za prehod v Srebrni (privzeto: 499 EUR)
-- Minimalni znesek za ohranitev Srebrnega (privzeto: 200 EUR)
-- Minimalni znesek za ohranitev Zlatega (privzeto: 500 EUR)
-- Mejni znesek za vrnitev v Osnovni iz Bronastega (privzeto: 50 EUR)
-- Število mesecev za ohranjanje statusa pred degradacijo
+**Nastavljivi parametri:**
+- minimalni znesek za prehod v Srebrni
+- minimalni znesek za ohranitev Srebrnega
+- minimalni znesek za ohranitev Zlatega
+- mejni znesek za vrnitev v Osnovni iz Bronastega
+- število mesecev za ohranjanje statusa pred degradacijo
 
 **Prioriteta:** Visoka
 
@@ -344,10 +372,10 @@ Sistem se integrira z obstoječim poslovnim informacijskim sistemom (IS) trgovsk
 #### FR-POR-01 — Pregled stanja točk
 
 **Opis:** Prijavljen član mora imeti možnost vpogleda v:
-- Skupno število zbranih točk
-- Trenutni status lojalnosti
-- Grafični prikaz napredka do naslednjega statusa
-- Datum naslednjega mesečnega izračuna
+- skupno število zbranih točk
+- trenutni status lojalnosti
+- grafični prikaz napredka do naslednjega statusa
+- datum naslednjega mesečnega izračuna
 
 **Prioriteta:** Visoka
 
@@ -357,7 +385,11 @@ Sistem se integrira z obstoječim poslovnim informacijskim sistemom (IS) trgovsk
 
 **Opis:** Član mora imeti pregled mesečnih zneskov nakupov za pretekla obdobja.
 
-**Prikazani podatki:** Mesec, skupni znesek nakupov, pridobljene točke, status v tistem mesecu.
+**Prikazani podatki:**
+- mesec
+- skupni znesek nakupov
+- pridobljene točke
+- status v tistem mesecu
 
 **Prioriteta:** Srednja
 
@@ -365,9 +397,13 @@ Sistem se integrira z obstoječim poslovnim informacijskim sistemom (IS) trgovsk
 
 #### FR-POR-03 — Pregled kataloga nagrad
 
-**Opis:** Član mora imeti dostop do kataloga nagrad, ki jih je mogoče pridobiti z točkami.
+**Opis:** Član mora imeti dostop do kataloga nagrad, ki jih je mogoče pridobiti s točkami.
 
-**Prikazani podatki:** Opis nagrade, potrebno število točk, razpoložljivost, kategorija.
+**Prikazani podatki:**
+- opis nagrade
+- potrebno število točk
+- razpoložljivost
+- kategorija
 
 **Prioriteta:** Srednja
 
@@ -395,7 +431,11 @@ Sistem se integrira z obstoječim poslovnim informacijskim sistemom (IS) trgovsk
 
 **Opis:** Administrator mora imeti možnost pregleda statusov vseh strank za poljubno izbrano časovno obdobje.
 
-**Filtri:** Časovno obdobje, status, abecedni red, regija.
+**Filtri:**
+- časovno obdobje
+- status
+- abecedni red
+- regija
 
 **Prioriteta:** Visoka
 
@@ -404,10 +444,10 @@ Sistem se integrira z obstoječim poslovnim informacijskim sistemom (IS) trgovsk
 #### FR-ADM-02 — Pregled statistike nakupov
 
 **Opis:** Administrator mora imeti dostop do agregiranih statistik nakupov:
-- Povprečni znesek nakupa po statusu
-- Porazdelitev članov po statusih
-- Mesečni trend rasti programa
-- Skupno število dodeljenih in koriščenih točk
+- povprečni znesek nakupa po statusu
+- porazdelitev članov po statusih
+- mesečni trend rasti programa
+- skupno število dodeljenih in koriščenih točk
 
 **Prioriteta:** Srednja
 
@@ -415,9 +455,9 @@ Sistem se integrira z obstoječim poslovnim informacijskim sistemom (IS) trgovsk
 
 #### FR-ADM-03 — Poljubne poizvedbe po podatkovni bazi
 
-**Opis:** Super-administrator mora imeti možnost izvajanja parametriziranih poizvedb po podatkovni bazi prek grafičnega vmesnika (brez pisanja SQL neposredno).
+**Opis:** Super-administrator mora imeti možnost izvajanja parametriziranih poizvedb po podatkovni bazi prek grafičnega vmesnika brez neposrednega pisanja SQL.
 
-**Opomba:** Poizvedbe morajo biti samo za branje (SELECT); urejanje podatkov prek tega vmesnika ni dovoljeno.
+**Opomba:** Poizvedbe morajo biti samo za branje; urejanje podatkov prek tega vmesnika ni dovoljeno.
 
 **Prioriteta:** Srednja
 
@@ -426,10 +466,12 @@ Sistem se integrira z obstoječim poslovnim informacijskim sistemom (IS) trgovsk
 #### FR-ADM-04 — Upravljanje kataloga nagrad
 
 **Opis:** Administrator mora imeti možnost:
-- Dodajanja, urejanja in brisanja nagrad v katalogu
-- Nastavljanja vrednosti nagrade v točkah
-- Upravljanja zalog in razpoložljivosti nagrad
-- Označevanja nagrad kot aktivnih ali neaktivnih
+- dodajanja nagrad v katalog
+- urejanja nagrad
+- brisanja nagrad
+- nastavljanja vrednosti nagrade v točkah
+- upravljanja zalog in razpoložljivosti nagrad
+- označevanja nagrad kot aktivnih ali neaktivnih
 
 **Prioriteta:** Visoka
 
@@ -437,9 +479,9 @@ Sistem se integrira z obstoječim poslovnim informacijskim sistemom (IS) trgovsk
 
 #### FR-ADM-05 — Upravljanje pravil točkovanja in statusov
 
-**Opis:** Administrator mora imeti možnost urejanja vrednosti v tabeli točkovanja in mejnih vrednosti za prehajanje med statusi prek grafičnega vmesnika — brez posega v kodo.
+**Opis:** Administrator mora imeti možnost urejanja vrednosti v tabeli točkovanja in mejnih vrednosti za prehajanje med statusi prek grafičnega vmesnika brez posega v kodo.
 
-**Varnostna zahteva:** Vsaka sprememba pravil mora biti evidentirana (avtor, čas, stara in nova vrednost).
+**Varnostna zahteva:** Vsaka sprememba pravil mora biti evidentirana z avtorjem, časom ter staro in novo vrednostjo.
 
 **Prioriteta:** Visoka
 
@@ -448,10 +490,10 @@ Sistem se integrira z obstoječim poslovnim informacijskim sistemom (IS) trgovsk
 #### FR-ADM-06 — Upravljanje uporabniških računov članov
 
 **Opis:** Administrator mora imeti možnost:
-- Iskanja članov po e-naslovu, imenu ali membership ID
-- Pregleda celotne zgodovine točk in statusov posameznega člana
-- Ročnega zaklepanja ali odklepanja računa
-- Ručne prilagoditve točk (z obveznim vnosom utemeljitve)
+- iskanja članov po e-poštnem naslovu, imenu ali membership ID
+- pregleda celotne zgodovine točk in statusov posameznega člana
+- ročnega zaklepanja ali odklepanja računa
+- ročne prilagoditve točk z obveznim vnosom utemeljitve
 
 **Prioriteta:** Srednja
 
@@ -461,10 +503,14 @@ Sistem se integrira z obstoječim poslovnim informacijskim sistemom (IS) trgovsk
 
 #### FR-INT-01 — Pridobivanje podatkov o nakupih
 
-**Opis:** Sistem mora imeti mehanizem za redno (mesečno) pridobivanje agregatnih podatkov o nakupih strank iz poslovnega IS.
+**Opis:** Sistem mora imeti mehanizem za redno mesečno pridobivanje agregatnih podatkov o nakupih strank iz poslovnega IS.
 
-**Vhodi:** Zahteva za podatke za določen mesec in seznam membership ID-jev.  
-**Izhodi:** Skupni znesek nakupov na posameznega člana za zahtevano obdobje.
+**Vhodi:**
+- zahteva za podatke za določen mesec
+- seznam membership ID-jev
+
+**Izhodi:**
+- skupni znesek nakupov na posameznega člana za zahtevano obdobje
 
 **Obdelava:** Sistem sproži mesečni izračun točk samodejno po pridobitvi vseh podatkov.
 
@@ -483,16 +529,16 @@ Sistem mora podpirati vsaj **10.000 sočasnih uporabnikov** portala brez degrada
 #### TR-PER-02 — Odzivni čas
 
 - Statične strani: odzivni čas < **2 sekundi** (95. percentil)
-- Dinamične poizvedbe (pregled točk, zgodovine): < **3 sekunde** (95. percentil)
+- Dinamične poizvedbe: odzivni čas < **3 sekunde** (95. percentil)
 - Mesečni izračun točk za 500.000 članov: zaključen v < **4 ure**
 
 #### TR-PER-03 — Obseg podatkov
 
-Sistem mora podpirati vsaj **500.000 aktivnih članov**, pri čemer mora biti arhitektura zasnovana tako, da omogoča rast na **več milijonov** članov brez predelave jedra sistema (za namen mednarodnega trženja).
+Sistem mora podpirati vsaj **500.000 aktivnih članov**, pri čemer mora biti arhitektura zasnovana tako, da omogoča rast na več milijonov članov brez predelave jedra sistema.
 
 #### TR-PER-04 — Razširljivost arhitekture
 
-Sistem mora biti zasnovan z možnostjo horizontalnega skaliranja aplikacijskega nivoja (npr. z uravnoteženjem obremenitve). Podatkovna baza mora podpirati particioniranje tabel za velike nabore podatkov.
+Sistem mora biti zasnovan z možnostjo horizontalnega skaliranja aplikacijskega nivoja. Podatkovna baza mora podpirati particioniranje tabel za velike nabore podatkov.
 
 ---
 
@@ -500,35 +546,35 @@ Sistem mora biti zasnovan z možnostjo horizontalnega skaliranja aplikacijskega 
 
 #### TR-SEC-01 — Avtentikacija
 
-- Gesla morajo biti shranjena z algoritmom **bcrypt** (minimalni faktor: 12).
-- Sejni žetoni morajo biti implementirani kot kratkoživni **JWT** (Access Token: 15 minut, Refresh Token: 7 dni).
+- Gesla morajo biti shranjena z algoritmom **bcrypt** z minimalnim faktorjem 12.
+- Sejni žetoni morajo biti implementirani kot kratkoživni **JWT**.
 - Sistem mora podpirati zaščito pred CSRF napadi.
 
 #### TR-SEC-02 — Šifriranje prenosa
 
-Vsa komunikacija med odjemalcem in strežnikom mora potekati prek **TLS 1.2 ali novejšega** (HTTPS).
+Vsa komunikacija med odjemalcem in strežnikom mora potekati prek **TLS 1.2 ali novejšega**.
 
-#### TR-SEC-03 — Verifikacija e-naslova
+#### TR-SEC-03 — Verifikacija e-poštnega naslova
 
-Verifikacijski žeton mora biti kriptografsko naključen (minimalno 128-bitna entropija) in enkratno-uporaben.
+Verifikacijski žeton mora biti kriptografsko naključen in enkratno uporaben.
 
 #### TR-SEC-04 — Zaščita pred napadi
 
-- Sistem mora implementirati **rate limiting** na prijavnem vmesniku (max. 5 poskusov / 15 minut na IP).
+- Sistem mora implementirati **rate limiting** na prijavnem vmesniku.
 - Sistem mora implementirati zaščito pred SQL injection, XSS in CSRF napadi.
-- Vse vhodne podatke je treba sanitizirati in validirati na strežniški strani.
+- Vse vhodne podatke je treba validirati in sanitizirati na strežniški strani.
 
 #### TR-SEC-05 — Skladnost z GDPR
 
-Sistem mora biti skladen z Uredbo (EU) 2016/679 (GDPR):
-- Stranka mora izrecno privoliti v obdelavo osebnih podatkov ob registraciji.
-- Sistem mora podpirati pravico do pozabe (brisanje osebnih podatkov na zahtevo).
-- Sistem mora omogočati izvoz osebnih podatkov posameznika v strojno berljivi obliki.
-- Dostop do osebnih podatkov mora biti evidentiran (audit log).
+Sistem mora biti skladen z Uredbo (EU) 2016/679:
+- izrecna privolitev v obdelavo osebnih podatkov ob registraciji
+- podpora pravici do pozabe
+- možnost izvoza osebnih podatkov posameznika
+- beleženje dostopa do osebnih podatkov
 
 #### TR-SEC-06 — Nadzor dostopa
 
-- Sistem mora implementirati **vloge** (RBAC — Role-Based Access Control): Član, Administrator, Super-administrator.
+- Sistem mora implementirati **RBAC** vloge: Član, Administrator, Super-administrator.
 - Vsak dostop do administrativnih funkcij mora biti evidentiran z identiteto uporabnika in časovnim žigom.
 
 ---
@@ -537,18 +583,18 @@ Sistem mora biti skladen z Uredbo (EU) 2016/679 (GDPR):
 
 #### TR-REL-01 — Razpoložljivost sistema
 
-Sistem mora zagotavljati razpoložljivost vsaj **99,5 %** (merjeno mesečno), kar ustreza največ ~3,6 ure izpada mesečno.
+Sistem mora zagotavljati razpoložljivost vsaj **99,5 %** mesečno.
 
 #### TR-REL-02 — Varnostne kopije
 
-- Podatkovna baza mora biti varnostno kopirana dnevno (polna kopija) in urno (inkrementalna).
-- Čas obnovitve po napaki (RTO) mora biti < **4 ure**.
-- Ciljna točka obnovitve (RPO) mora biti < **1 ura**.
+- Podatkovna baza mora biti varnostno kopirana dnevno s polno kopijo in urno z inkrementalno kopijo.
+- Čas obnovitve po napaki mora biti < **4 ure**.
+- Ciljna točka obnovitve mora biti < **1 ura**.
 
 #### TR-REL-03 — Obvladovanje napak
 
-- Mesečni izračun točk mora biti transakcijsko varen: v primeru napake mora sistem shraniti stanje in nadaljevati od zadnjega uspešnega koraka (idempotenten izračun).
-- Sistem mora zagotavljati prijazna sporočila o napakah brez razkrivanja tehničnih podrobnosti strankam.
+- Mesečni izračun točk mora biti transakcijsko varen in idempotenten.
+- Sistem mora zagotavljati prijazna sporočila o napakah brez razkrivanja tehničnih podrobnosti.
 
 ---
 
@@ -556,15 +602,23 @@ Sistem mora zagotavljati razpoložljivost vsaj **99,5 %** (merjeno mesečno), ka
 
 #### TR-MNT-01 — Nastavljiva pravila
 
-Vsa poslovna pravila (tabela točkovanja, mejne vrednosti statusov) morajo biti shranjena v podatkovni bazi (ne v kodi) in spremenljiva prek administrativnega vmesnika.
+Vsa poslovna pravila morajo biti shranjena v podatkovni bazi in spremenljiva prek administrativnega vmesnika.
 
-#### TR-MNT-02 — Beleženje (logging)
+#### TR-MNT-02 — Beleženje
 
-Sistem mora beležiti vse ključne operacije: prijave, spremembe podatkov, dodelitve točk, koriščenja točk, spremembe pravil in administrativne akcije. Dnevniki morajo biti hranjeni vsaj **12 mesecev**.
+Sistem mora beležiti:
+- prijave
+- spremembe podatkov
+- dodelitve točk
+- koriščenja točk
+- spremembe pravil
+- administrativne akcije
+
+Dnevniki morajo biti hranjeni vsaj **12 mesecev**.
 
 #### TR-MNT-03 — Večjezičnost
 
-Sistem mora biti zgrajen na osnovi i18n (internationalization) arhitekture, ki omogoča preprosto dodajanje novih jezikov brez posega v kodo aplikacije. Sprva sta podprta slovenščina (SL) in angleščina (EN).
+Sistem mora biti zgrajen na osnovi i18n arhitekture, ki omogoča dodajanje novih jezikov brez posega v kodo.
 
 ---
 
@@ -572,17 +626,17 @@ Sistem mora biti zgrajen na osnovi i18n (internationalization) arhitekture, ki o
 
 #### TR-TECH-01 — Podatkovna baza
 
-Sistem mora za primarno podatkovno shrambo uporabiti **Oracle Database** (v skladu z obstoječimi licencami).
+Sistem mora za primarno podatkovno shrambo uporabiti **Oracle Database**.
 
 #### TR-TECH-02 — Spletni portal
 
 Spletni portal mora biti zgrajen z modernimi spletnimi tehnologijami:
-- Odzivni dizajn (responsive design) za podporo mobilnim in namiznim napravam
-- Brskalniška kompatibilnost: najnovejše različice Chrome, Firefox, Safari, Edge
+- odzivni dizajn za mobilne in namizne naprave
+- kompatibilnost z najnovejšimi različicami Chrome, Firefox, Safari in Edge
 
 #### TR-TECH-03 — Aplikacijski strežnik
 
-Aplikacijski strežnik mora biti zasnovan na osnovi REST API arhitekture, ki omogoča ločen razvoj zaledja in čelnega sistema ter poenostavlja bodočo integracijo z mobilnimi aplikacijami ali zunanjimi sistemi.
+Aplikacijski strežnik mora biti zasnovan na osnovi REST API arhitekture.
 
 ---
 
@@ -592,17 +646,17 @@ Aplikacijski strežnik mora biti zasnovan na osnovi REST API arhitekture, ki omo
 
 #### IF-UI-01 — Splošna načela
 
-- Vmesnik mora biti **intuitiven** in ne sme zahtevati predhodnega usposabljanja za osnovno rabo.
-- Dizajn mora slediti principom **UX dobre prakse**: jasna hierarhija informacij, vidne akcijske gumbe, smiselna povratna informacija ob napakah.
-- Vmesnik mora biti **odziven** (responsive) in enako uporaben na mobilnih napravah, tablicah in namiznih računalnikih.
-- Vmesnik mora podpirati **dva jezika** (SL/EN) z možnostjo preklopa brez ponovne naložitve strani.
+- Vmesnik mora biti intuitiven in ne sme zahtevati predhodnega usposabljanja za osnovno rabo.
+- Dizajn mora slediti principom dobre UX prakse.
+- Vmesnik mora biti odziven.
+- Vmesnik mora podpirati dva jezika z možnostjo preklopa brez ponovne naložitve strani.
 
 #### IF-UI-02 — Strankarski portal — ključni zasloni
 
 | Zaslon | Opis |
 |---|---|
 | Registracija | Večkoračni obrazec z validacijo v realnem času |
-| Prijava | Obrazec z e-naslovom in geslom, "Pozabljeno geslo" |
+| Prijava | Obrazec z e-poštnim naslovom in geslom ter povezavo "Pozabljeno geslo" |
 | Nadzorna plošča | Stanje točk, status, napredek do naslednjega statusa |
 | Zgodovina točk | Kronološki seznam transakcij točk |
 | Katalog nagrad | Kartični pregled nagrad s filtriranjem |
@@ -625,34 +679,33 @@ Aplikacijski strežnik mora biti zasnovan na osnovi REST API arhitekture, ki omo
 
 #### IF-API-01 — REST API
 
-Sistem mora zagotavljati interni REST API za komunikacijo med čelnim sistemom (frontend) in zalednim sistemom (backend).
+Sistem mora zagotavljati interni REST API za komunikacijo med frontend in backend delom sistema.
 
-**Ključne skupne točke (endpoints):**
+**Ključne skupne točke:**
 
-```
-POST   /api/auth/register          # Registracija novega člana
-POST   /api/auth/login             # Prijava
-POST   /api/auth/verify-email      # Verifikacija e-naslova
-POST   /api/auth/refresh           # Osvežitev JWT žetona
-POST   /api/auth/forgot-password   # Zahteva za ponastavitev gesla
+```text
+POST   /api/v1/auth/register
+POST   /api/v1/auth/login
+POST   /api/v1/auth/verify-email
+POST   /api/v1/auth/refresh
+POST   /api/v1/auth/forgot-password
 
-GET    /api/member/me              # Podatki prijavljenega člana
-GET    /api/member/points          # Stanje in zgodovina točk
-GET    /api/member/purchases       # Zgodovina nakupov
-POST   /api/member/redeem          # Koriščenje točk
+GET    /api/v1/member/me
+GET    /api/v1/member/points
+GET    /api/v1/member/purchases
+POST   /api/v1/member/redeem
 
-GET    /api/rewards                # Katalog nagrad
-GET    /api/rewards/:id            # Posamezna nagrada
+GET    /api/v1/rewards
+GET    /api/v1/rewards/:id
 
-GET    /api/admin/members          # Seznam vseh članov (admin)
-GET    /api/admin/stats            # Statistike programa (admin)
-PUT    /api/admin/rules/points     # Posodobitev točkovnika (admin)
-PUT    /api/admin/rules/tiers      # Posodobitev statusnih pragov (admin)
+GET    /api/v1/admin/members
+GET    /api/v1/admin/stats
+PUT    /api/v1/admin/rules/points
+PUT    /api/v1/admin/rules/tiers
 ```
 
 **Format:** JSON  
-**Verzioniranje:** `/api/v1/...`  
-**Avtentikacija:** Bearer JWT žeton v glavi `Authorization`
+**Avtentikacija:** Bearer JWT v glavi `Authorization`
 
 ---
 
@@ -661,18 +714,20 @@ PUT    /api/admin/rules/tiers      # Posodobitev statusnih pragov (admin)
 #### IF-DB-01 — Oracle Database
 
 Sistem komunicira z Oracle podatkovno bazo prek:
-- Standardnega JDBC/OCI gonilnika
-- Parametriziranih poizvedb (prepared statements) za zaščito pred SQL injection
-- Oracle connection pool za učinkovito upravljanje povezav
+- standardnega JDBC ali OCI gonilnika
+- parametriziranih poizvedb
+- connection pool mehanizma
 
-**Ključne tabele (logični model):**
+**Ključne tabele logičnega modela:**
 
 | Tabela | Namen |
 |---|---|
 | `CLANI` | Osrednja tabela članov programa |
+| `UPORABNISKE_RACUNE` | Avtentikacijski podatki članov |
+| `KARTICE_LOJALNOSTI` | Fizične kartice lojalnosti |
 | `STATUSI_CLANOV` | Zgodovina statusov posameznega člana |
 | `TRANSAKCIJE_TOCK` | Vse transakcije pridobivanja in koriščenja točk |
-| `NAKUPI_MESECNI` | Mesečni agregati nakupov (uvoženi iz poslovnega IS) |
+| `MESECNI_NAKUPI` | Mesečni agregati nakupov |
 | `NAGRADE` | Katalog nagrad |
 | `PRAVILA_TOCK` | Konfigurabilna tabela točkovnika |
 | `PRAVILA_STATUSOV` | Konfigurabilni pragovi za prehajanje statusov |
@@ -686,9 +741,10 @@ Sistem komunicira z Oracle podatkovno bazo prek:
 
 Sistem mora imeti dobro definiran vmesnik za uvoz mesečnih podatkov o nakupih iz poslovnega IS.
 
-**Priporočeni pristop:** REST API ali zaščitena datotečna izmenjava (SFTP + šifriran CSV/JSON).
+**Priporočeni pristop:** REST API ali zaščitena datotečna izmenjava.
 
 **Zahtevana polja:**
+
 ```json
 {
   "mesec": "2026-02",
@@ -702,8 +758,8 @@ Sistem mora imeti dobro definiran vmesnik za uvoz mesečnih podatkov o nakupih i
 ```
 
 **Varnost vmesnika:**
-- Vmesnik mora biti zaščiten z API ključem ali mTLS certifikatom.
-- Dostop je dovoljen samo z odobrenih IP naslovov.
+- API ključ ali mTLS certifikat
+- dostop samo z odobrenih IP naslovov
 
 ---
 
@@ -711,18 +767,18 @@ Sistem mora imeti dobro definiran vmesnik za uvoz mesečnih podatkov o nakupih i
 
 #### IF-NOT-01 — E-poštno obveščanje
 
-Sistem mora pošiljati naslednje avtomatizirane e-poštne obvestila:
+Sistem mora pošiljati naslednja avtomatizirana e-poštna obvestila:
 
 | Sprožilec | Vsebina sporočila |
 |---|---|
-| Registracija | Dobrodošlica + aktivacijska povezava |
-| Aktivacija računa | Potrditev aktivacije, navodila za prijavo |
+| Registracija | Dobrodošlica in aktivacijska povezava |
+| Aktivacija računa | Potrditev aktivacije in navodila za prijavo |
 | Mesečni izračun | Pregled točk in morebitna sprememba statusa |
 | Koriščenje točk | Potrditev naročila nagrade |
 | Sprememba gesla | Varnostno obvestilo |
 | Napredovanje statusa | Čestitke ob napredovanju v višji status |
 
-**Tehnična zahteva:** E-pošta mora biti poslana prek SMTP strežnika z DKIM podpisom. Sporočila morajo biti oblikovana v HTML formatu (z dostopnim navadnotekstovnim alternativom) in lokalizirana (SL/EN).
+**Tehnična zahteva:** E-pošta mora biti poslana prek SMTP strežnika z DKIM podpisom in mora biti lokalizirana.
 
 ---
 
@@ -730,88 +786,80 @@ Sistem mora pošiljati naslednje avtomatizirane e-poštne obvestila:
 
 | Izraz | Definicija |
 |---|---|
-| **Program lojalnosti** | Strukturiran sistem nagrajevanja strank za ponovne nakupe pri Maestru. |
-| **Član programa** | Stranka, ki se je uspešno registrirala in aktivirala račun v programu lojalnosti. |
-| **Kartica lojalnosti** | Fizična kartica z unikatno številko (membership ID), ki identificira člana pri nakupu. |
-| **Membership ID** | Edinstvena identifikacijska številka člana programa (npr. MST-00123456). |
-| **Status (lojalnostni nivo)** | Kategorija, ki določa prednosti in vrednost točk za posameznega člana. Možni statusi: Osnovni, Bronasti, Srebrni, Zlati. |
-| **Status Osnovni** | Začetni status, ki ga dobi vsak novo vključeni član. |
-| **Status Bronasti** | Kazenski status za stranke, ki dlje časa ne dosegajo minimalnih nakupnih pragov. |
-| **Status Srebrni** | Vmesni napredovalni status, dosežen ob prekoračitvi 499 EUR mesečnih nakupov. |
-| **Status Zlati** | Najvišji status, dosežen ob ponavljajočih se nakupih nad 500 EUR. |
-| **Točke zvestobe** | Virtualna valuta, ki jo člani zbirajo z nakupi in jo koristijo za nagrade. |
-| **Mesečni izračun** | Avtomatizirani postopek, ki se izvede enkrat mesečno: posodobi statuse in dodeli točke za pretekli mesec. |
-| **Točkovnik** | Tabela, ki določa število točk glede na znesek nakupov in status stranke. |
-| **Katalog nagrad** | Seznam nagrad, ki so na voljo za koriščenje točk lojalnosti. |
-| **Koriščenje točk** | Postopek, s katerim član zamenja zbrane točke za nagrado iz kataloga. |
-| **Strankarski portal** | Spletna aplikacija za člane programa, namenjena pregledu točk, nakupov in koriščenju nagrad. |
-| **Administrativni portal** | Spletna aplikacija za upravljavce programa, namenjena nadzoru, statistikam in konfiguraciji pravil. |
-| **Prehajanje med statusi** | Proces avtomatske spremembe lojalnostnega statusa stranke na podlagi mesečnih nakupov. |
-| **Poslovni IS** | Obstoječi informacijski sistem Maestra, ki vodi evidenco vseh nakupov. |
-| **JWT (JSON Web Token)** | Standardiziran kriptografski žeton za avtentikacijo in avtorizacijo v spletnih aplikacijah. |
-| **GDPR** | Splošna uredba EU o varstvu osebnih podatkov (Uredba 2016/679). |
-| **REST API** | Arhitekturni slog za gradnjo spletnih storitev, ki temelji na HTTP protokolu. |
-| **RBAC** | Nadzor dostopa na podlagi vlog (Role-Based Access Control). |
-| **bcrypt** | Kriptografski algoritem za varno shranjevanje gesel z adaptivnim faktorjem. |
-| **TLS** | Transport Layer Security — protokol za šifriranje omrežne komunikacije. |
-| **Rate limiting** | Tehnika omejevanja števila zahtev na strežnik v določenem časovnem oknu. |
-| **i18n** | Internationalization — arhitekturni vzorec za gradnjo večjezičnih aplikacij. |
-| **SRS** | Software Requirements Specification — specifikacija zahtev programske opreme. |
-| **RTO** | Recovery Time Objective — cilj časa obnovitve po napaki. |
-| **RPO** | Recovery Point Objective — ciljna točka obnovitve (maksimalna dovoljena izguba podatkov). |
-| **Audit log / revizijska sled** | Kronološki dnevnik vseh pomembnih operacij v sistemu z identiteto akterja. |
-| **SFTP** | SSH File Transfer Protocol — varni protokol za prenos datotek. |
-| **mTLS** | Mutual TLS — vzajemna avtentikacija med odjemalcem in strežnikom prek digitalnih certifikatov. |
+| **Program lojalnosti** | Sistem nagrajevanja strank za ponovne nakupe pri Maestru |
+| **Član programa** | Stranka, ki se je uspešno registrirala in aktivirala račun |
+| **Kartica lojalnosti** | Fizična kartica z unikatno številko člana |
+| **Membership ID** | Edinstvena identifikacijska številka člana |
+| **Status** | Kategorija lojalnosti člana |
+| **Status Osnovni** | Začetni status |
+| **Status Bronasti** | Kazenski status ob neizpolnjevanju pogojev |
+| **Status Srebrni** | Vmesni napredovalni status |
+| **Status Zlati** | Najvišji status |
+| **Točke zvestobe** | Virtualna valuta za nagrade |
+| **Mesečni izračun** | Postopek posodobitve statusov in dodelitve točk |
+| **Točkovnik** | Tabela za določanje števila točk |
+| **Katalog nagrad** | Seznam nagrad za koriščenje točk |
+| **Koriščenje točk** | Menjava točk za nagrado |
+| **Strankarski portal** | Portal za člane programa |
+| **Administrativni portal** | Portal za upravljavce programa |
+| **Prehajanje med statusi** | Avtomatska sprememba statusa glede na nakupe |
+| **Poslovni IS** | Sistem Maestra za evidenco nakupov |
+| **JWT** | JSON Web Token za avtentikacijo |
+| **GDPR** | Splošna uredba o varstvu osebnih podatkov |
+| **REST API** | Arhitekturni slog spletnih storitev |
+| **RBAC** | Nadzor dostopa na podlagi vlog |
+| **bcrypt** | Algoritem za varno shranjevanje gesel |
+| **TLS** | Protokol za šifriranje omrežne komunikacije |
+| **Rate limiting** | Omejevanje števila zahtev v času |
+| **i18n** | Arhitektura za večjezičnost |
+| **SRS** | Specifikacija zahtev programske opreme |
+| **RTO** | Cilj časa obnovitve po napaki |
+| **RPO** | Maksimalna dovoljena izguba podatkov |
+| **Audit log / revizijska sled** | Dnevnik pomembnih operacij |
+| **SFTP** | Varni protokol za prenos datotek |
+| **mTLS** | Vzajemna TLS avtentikacija |
 
 ---
-
 
 ## 6. Diagram primerov uporabe
 
-<p align="center">
-  <img src="diagram.png" alt="Use case diagram" width="1000">
-</p>
+Datoteka diagrama primerov uporabe: `diagram.png`
 
 ---
 
-
 ## 7. Funkcionalna dekompozicija
 
-<p align="center">
-  <img src="fundediag.png" alt="Funkcionalna dekompozicija" width="1000">
-</p>
-
-
+Datoteka funkcionalne dekompozicije: `fundediag.png`
 
 ---
 
 ## 8. Opis modela
 
-### 8.1. Ključne entitete
+### 8.1 Ključne entitete
 
-**CLANI** je osrednja entiteta sistema. Hrani osebne podatke člana (ime, priimek, email, naslov, datum rojstva), membership ID v obliki `MST-XXXXXXXX`, trenutni status ter skupno stanje točk. Ločena od uporabniškega računa zaradi GDPR zahtev (TR-SEC-05).
+**CLANI** je osrednja entiteta sistema. Hrani osebne podatke člana (ime, priimek, e-poštni naslov, naslov, telefonska številka, datum rojstva), membership ID v obliki `MST-XXXXXXXX`, trenutni status ter skupno stanje točk. Atribut `skupne_tocke` je denormalizirana vrednost za hitrejši prikaz v portalu, medtem ko je revizijsko sledljiva zgodovina točk shranjena v tabeli `TRANSAKCIJE_TOCK`. Entiteta hrani tudi jezikovno nastavitev in nastavitve obveščanja.
 
-**UPORABNISKE_RACUNE** hrani izključno avtentikacijske podatke — bcrypt hash gesla (faktor ≥ 12 kot zahteva TR-SEC-01), status verifikacije emaila, čas in IP verifikacije ter datum zaklenjenosti računa (po 5 neuspešnih poskusih, FR-REG-03).
+**UPORABNISKE_RACUNE** hrani avtentikacijske podatke, vključno z bcrypt hash gesla, statusom verifikacije e-pošte, časom in IP naslovom verifikacije, številom neuspešnih prijav in datumom `zaklenjen_do`.
 
-**KARTICE_LOJALNOSTI** predstavlja fizično kartico z unikatno številko, datumom izdaje in datumom pošiljanja po pošti (FR-REG-01).
+**KARTICE_LOJALNOSTI** predstavlja fizično kartico z unikatno številko, datumom izdaje in datumom pošiljanja.
 
-**STATUSI_CLANOV** beleži celotno zgodovino statusnih sprememb — vsak prehod med statusi (osnovni → srebrni itd.) z razlogom in časovnim žigom. Nujno za FR-ADM-01 (pregled za poljubno obdobje) in revizijsko sled.
+**STATUSI_CLANOV** beleži celotno zgodovino statusnih sprememb z razlogom in časovnim žigom.
 
-**MESECNI_NAKUPI** hrani agregate zneskov, uvožene iz poslovnega IS (IF-BIS-01). Vsebuje membership ID, leto, mesec, skupni znesek in čas uvoza. Ni vezana na posamezne blagajniške račune.
+**MESECNI_NAKUPI** hrani agregirane mesečne zneske nakupov, uvožene iz poslovnega IS.
 
-**PRAVILA_TOCK** je konfigurabilna tabela točkovnika — za vsako kombinacijo statusa in razreda zneska hrani število točk. Spremenljiva prek administrativnega vmesnika brez posega v kodo (FR-PTS-01, TR-MNT-01). Podpira veljavnost (`valid_from`/`valid_to`) za zgodovino sprememb.
+**PRAVILA_TOCK** je konfigurabilna tabela točkovnika za kombinacije statusa in razreda zneska.
 
-**PRAVILA_STATUSOV** hrani mejne vrednosti za prehajanje med statusi (499 EUR, 200 EUR, 500 EUR, 50 EUR itd.) kot nastavljive parametre (FR-STS-08). Vsaka vrednost ima ime parametra, vrednost in opis.
+**PRAVILA_STATUSOV** hrani pragove za prehajanje med statusi.
 
-**TRANSAKCIJE_TOCK** beleži vsako dodelitev in koriščenje točk — vrsta (`DODELITEV`/`KORIŠČENJE`), število točk, status ob dodelitvi, referenca na mesečni nakup ali nagrado. Skupno stanje točk je derivirano iz te tabele (FR-PTS-03).
+**TRANSAKCIJE_TOCK** beleži vsako dodelitev in koriščenje točk.
 
-**NAGRADE** je katalog nagrad z imenom, opisom, potrebnimi točkami, zalogo in statusom aktivnosti (FR-ADM-04). Podpira veljavnost nagrade.
+**NAGRADE** je katalog nagrad z opisom, zalogo in zahtevanimi točkami.
 
-**REVIZIJSKA_SLED** evidentira vse administrativne akcije in spremembe pravil — kdo, kdaj, kaj je spremenil (stara/nova vrednost). Zahtevano z FR-ADM-05 in TR-MNT-02, hranjeno vsaj 12 mesecev.
+**REVIZIJSKA_SLED** evidentira vse administrativne akcije in spremembe pravil.
 
 ---
 
-### 8.2. Odnosi med entitetami
+### 8.2 Odnosi med entitetami
 
 | Od | Do | Kardinalnost | Opis |
 |---|---|---|---|
@@ -820,24 +868,25 @@ Sistem mora pošiljati naslednje avtomatizirane e-poštne obvestila:
 | CLANI | STATUSI_CLANOV | 1 : N | Polna statusna zgodovina člana |
 | CLANI | MESECNI_NAKUPI | 1 : N | Mesečni agregati nakupov po članu |
 | CLANI | TRANSAKCIJE_TOCK | 1 : N | Vse dodelitve in koriščenja točk |
-| TRANSAKCIJE_TOCK | PRAVILA_TOCK | N : 1 (opcijsko) | Vsaka dodelitev po enem pravilu točkovanja |
-| TRANSAKCIJE_TOCK | NAGRADE | N : 1 (opcijsko) | Pri koriščenju vezano na nagrado |
-| REVIZIJSKA_SLED | CLANI | N : 1 (opcijsko) | Evidentira spremembe vezane na člana |
+| TRANSAKCIJE_TOCK | PRAVILA_TOCK | N : 1 | Vsaka dodelitev po enem pravilu točkovanja |
+| TRANSAKCIJE_TOCK | NAGRADE | N : 1 | Pri koriščenju vezano na nagrado |
+| REVIZIJSKA_SLED | CLANI | N : 1 | Evidentira spremembe vezane na člana |
 
 ---
 
-### 8.3. Posebnosti modela
+### 8.3 Posebnosti modela
 
-- **Pravila v bazi, ne v kodi** — tabeli `PRAVILA_TOCK` in `PRAVILA_STATUSOV` imata `veljavnost_od`/`veljavnost_do`, kar omogoča sledenje zgodovini sprememb in retroaktivno analizo.
-- **Status pred točkami** — tabela `TRANSAKCIJE_TOCK` hrani `status_ob_izracunu`, ker se status določi **pred** dodelitvijo točk (FR-STS-07). Kritično za pravilno revizijo.
-- **Oracle-kompatibilni tipi** — `NUMBER`, `VARCHAR2`, `DATE`, `CHAR` v skladu z zahtevo TR-TECH-01.
-- **Skalabilnost** — particioniranje predvideno na `MESECNI_NAKUPI` in `TRANSAKCIJE_TOCK` po letu/mesecu (TR-PER-04).
-- **GDPR** — osebni podatki so v `CLANI`, ločeni od avtentikacijskih podatkov v `UPORABNISKE_RACUNE`. Podpira pravico do pozabe (TR-SEC-05).
-- **Večjezičnost** — atribut `jezik` v `CLANI` hrani jezikovno nastavitev člana (i18n, TR-MNT-03).
+- **Pravila v bazi, ne v kodi** — tabeli `PRAVILA_TOCK` in `PRAVILA_STATUSOV` omogočata konfiguriranje pravil brez posega v aplikacijsko kodo.
+- **Status pred točkami** — status se določi pred dodelitvijo točk, zato tabela `TRANSAKCIJE_TOCK` hrani `status_ob_izracunu`.
+- **Oracle kompatibilnost** — predvideni so tipi `NUMBER`, `VARCHAR2`, `DATE` in `CHAR`.
+- **Skalabilnost** — predvideno je particioniranje tabel `MESECNI_NAKUPI` in `TRANSAKCIJE_TOCK`.
+- **Ločitev osebnih in avtentikacijskih podatkov** — osebni podatki so ločeni od prijavnih podatkov zaradi zahtev varnosti in GDPR.
+- **Denormalizirano stanje točk** — atribut `skupne_tocke` v tabeli `CLANI` se hrani kot optimizacijska, denormalizirana vrednost za hitrejši prikaz v portalu, medtem ko je primarna zgodovina vseh dodelitev in koriščenj shranjena v tabeli `TRANSAKCIJE_TOCK`.
+- **Večjezičnost in nastavitve obveščanja** — atributi `jezik`, `obvescanje_email` in `obvescanje_sms` pokrivajo upravljanje profila in uporabniških nastavitev.
 
 ---
 
-## 8.4. Konceptualni diagram (Mermaid ERD)
+### 8.4 Konceptualni diagram (Mermaid ERD)
 
 ```mermaid
 erDiagram
@@ -857,11 +906,14 @@ erDiagram
     VARCHAR2 priimek
     VARCHAR2 email
     VARCHAR2 naslov
+    VARCHAR2 telefon
     DATE datum_rojstva
     DATE datum_vclanitve
     VARCHAR2 trenutni_status
     NUMBER skupne_tocke
     VARCHAR2 jezik
+    CHAR obvescanje_email
+    CHAR obvescanje_sms
   }
 
   UPORABNISKE_RACUNE {
@@ -872,7 +924,7 @@ erDiagram
     DATE verificiran_ob
     VARCHAR2 verif_ip
     NUMBER neuspesni_poskusi
-    DATE zakljenjen_do
+    DATE zaklenjen_do
     DATE ustvarjen_ob
   }
 
@@ -961,59 +1013,57 @@ erDiagram
     VARCHAR2 ip_naslov
   }
 ```
----
-## 9. Zaslonske Maske
-Zaslonske maske —
-https://www.figma.com/make/1sIGmKPonaS92cMfcvy1et/Zaslonske-maske-za-projekt?fullscreen=1&t=2mY39sFObiXI8Cgc-1
 
 ---
 
+## 9. Zaslonske maske
+
+Zaslonske maske:
+`https://www.figma.com/make/1sIGmKPonaS92cMfcvy1et/Zaslonske-maske-za-projekt?fullscreen=1&t=2mY39sFObiXI8Cgc-1`
+
+---
 
 ## 10. Sledljivost zahtev → funkcije → zaslonske maske → tabele podatkovnega modela
 
 | Zahteva | Funkcije od te zahteve | Zaslonske maske | Tabele podatkovnega modela |
 |---|---|---|---|
-| **FR-REG-01 — Spletna registracija** | vnos osebnih podatkov, preverjanje enoličnosti e-naslova, ustvarjanje neaktivnega računa, pošiljanje aktivacijske povezave, aktivacija računa, dodelitev membership ID, sprožitev tiskanja in pošiljanja kartice | **Registracija** | `CLANI`, `UPORABNISKE_RACUNE`, `KARTICE_LOJALNOSTI` |
-| **FR-REG-02 — Verifikacija e-naslova** | pošiljanje verifikacijske e-pošte, generiranje enkratnega žetona, aktivacija računa po kliku, beleženje časa in IP verifikacije | **Registracija** | `UPORABNISKE_RACUNE` |
-| **FR-REG-03 — Prijava v sistem** | preverjanje e-naslova in gesla, primerjava bcrypt hash, ustvarjanje sejnega žetona JWT, zaklep računa po 5 neuspešnih prijavah | **Prijava** | `UPORABNISKE_RACUNE` |
-| **FR-REG-04 — Upravljanje profila** | posodobitev naslova, posodobitev telefonske številke, nastavitve obveščanja | **Profil** | `CLANI` |
+| **FR-REG-01 — Spletna registracija** | vnos osebnih podatkov, preverjanje enoličnosti e-poštnega naslova, ustvarjanje neaktivnega računa, pošiljanje aktivacijske povezave, aktivacija računa, dodelitev membership ID, sprožitev tiskanja in pošiljanja kartice | **Registracija** | `CLANI`, `UPORABNISKE_RACUNE`, `KARTICE_LOJALNOSTI` |
+| **FR-REG-02 — Verifikacija e-poštnega naslova** | pošiljanje verifikacijske e-pošte, generiranje enkratnega žetona, aktivacija računa po kliku, beleženje časa in IP verifikacije | **Registracija** | `UPORABNISKE_RACUNE` |
+| **FR-REG-03 — Prijava v sistem** | preverjanje e-poštnega naslova in gesla, primerjava bcrypt hash, ustvarjanje sejnega žetona JWT, zaklep računa po 5 neuspešnih prijavah | **Prijava** | `UPORABNISKE_RACUNE` |
+| **FR-REG-04 — Upravljanje profila** | posodobitev naslova, posodobitev telefonske številke, nastavitve obveščanja, sprememba jezika | **Profil** | `CLANI` |
 | **FR-REG-05 — Pozabljeno geslo** | zahteva za ponastavitev gesla, pošiljanje enkratne povezave za ponastavitev | **Prijava** | `UPORABNISKE_RACUNE` |
-| **FR-PTS-01 — Mesečni izračun točk** | pridobivanje mesečnega zneska nakupov, posodobitev statusa pred izračunom, dodelitev točk po točkovniku, beleženje dodelitve, prištevanje k stanju točk | ni eksplicitno navedeno | `MESECNI_NAKUPI`, `PRAVILA_TOCK`, `PRAVILA_STATUSOV`, `TRANSAKCIJE_TOCK`, `STATUSI_CLANOV`, `CLANI` |
+| **FR-PTS-01 — Mesečni izračun točk** | pridobivanje mesečnega zneska nakupov, posodobitev statusa pred izračunom, dodelitev točk po točkovniku, beleženje dodelitve, prištevanje k stanju točk | Backend proces / brez neposredne UI maske | `MESECNI_NAKUPI`, `PRAVILA_TOCK`, `PRAVILA_STATUSOV`, `TRANSAKCIJE_TOCK`, `STATUSI_CLANOV`, `CLANI` |
 | **FR-PTS-02 — Koriščenje točk** | preverjanje zadostnega stanja točk, odštevanje točk, evidenca koriščenja, sprožitev zagotovitve nagrade | **Katalog nagrad** | `TRANSAKCIJE_TOCK`, `NAGRADE`, `CLANI` |
 | **FR-PTS-03 — Pregled zgodovine točk** | prikaz zgodovine pridobivanja in koriščenja točk, prikaz datuma, vrste transakcije, števila točk, opisa in skupnega stanja | **Zgodovina točk** | `TRANSAKCIJE_TOCK`, `CLANI` |
-| **FR-STS-01 — Začetni status** | dodelitev začetnega statusa Osnovni ob registraciji | ni eksplicitno navedeno | `CLANI`, `STATUSI_CLANOV` |
+| **FR-STS-01 — Začetni status** | dodelitev začetnega statusa Osnovni ob registraciji | Backend proces / brez neposredne UI maske | `CLANI`, `STATUSI_CLANOV` |
 | **FR-STS-02 — Prehod v status Srebrni** | preverjanje mesečnega praga za prehod v Srebrni status, posodobitev statusa | **Nadzorna plošča**, **Posamezna stranka** | `STATUSI_CLANOV`, `MESECNI_NAKUPI`, `PRAVILA_STATUSOV`, `CLANI` |
 | **FR-STS-03 — Prehod v status Zlati** | preverjanje pogoja dveh mesecev nad pragom po pridobitvi Srebrnega statusa, posodobitev statusa | **Nadzorna plošča**, **Posamezna stranka** | `STATUSI_CLANOV`, `MESECNI_NAKUPI`, `PRAVILA_STATUSOV`, `CLANI` |
 | **FR-STS-04 — Ohranjanje statusa Srebrni** | preverjanje minimalnega zneska za ohranitev Srebrnega statusa, degradacija v Bronasti status po dveh zaporednih mesecih pod pragom | **Nadzorna plošča**, **Posamezna stranka** | `STATUSI_CLANOV`, `MESECNI_NAKUPI`, `PRAVILA_STATUSOV`, `CLANI` |
 | **FR-STS-05 — Ohranjanje statusa Zlati** | preverjanje minimalnega zneska za ohranitev Zlatega statusa, opozorilo po prvem neizpolnjenem mesecu, degradacija v Srebrni status po drugem | **Nadzorna plošča**, **Posamezna stranka** | `STATUSI_CLANOV`, `MESECNI_NAKUPI`, `PRAVILA_STATUSOV`, `CLANI` |
-| **FR-STS-06 — Status Bronasti in izhod iz njega** | vodenje Bronastega statusa, prehod v Srebrni po dveh zaporednih mesecih ≥ 200 EUR, vrnitev v Osnovni ob nakupu pod 50 EUR | **Nadzorna plošča**, **Posamezna stranka** | `STATUSI_CLANOV`, `MESECNI_NAKUPI`, `PRAVILA_STATUSOV`, `CLANI` |
-| **FR-STS-07 — Vrstni red operacij pri mesečnem izračunu** | pridobitev zneska nakupov, najprej posodobitev statusa, nato dodelitev točk po novem statusu | ni eksplicitno navedeno | `MESECNI_NAKUPI`, `STATUSI_CLANOV`, `PRAVILA_STATUSOV`, `PRAVILA_TOCK`, `TRANSAKCIJE_TOCK` |
+| **FR-STS-06 — Status Bronasti in izhod iz njega** | vodenje Bronastega statusa, prehod v Srebrni po dveh zaporednih mesecih >= 200 EUR, vrnitev v Osnovni ob nakupu < 50 EUR | **Nadzorna plošča**, **Posamezna stranka** | `STATUSI_CLANOV`, `MESECNI_NAKUPI`, `PRAVILA_STATUSOV`, `CLANI` |
+| **FR-STS-07 — Vrstni red operacij pri mesečnem izračunu** | pridobitev zneska nakupov, najprej posodobitev statusa, nato dodelitev točk po novem statusu | Backend proces / brez neposredne UI maske | `MESECNI_NAKUPI`, `STATUSI_CLANOV`, `PRAVILA_STATUSOV`, `PRAVILA_TOCK`, `TRANSAKCIJE_TOCK` |
 | **FR-STS-08 — Nastavljiva pravila statusov** | nastavljanje pragov za prehajanje med statusi prek administrativnega vmesnika | **Upravljanje pravil** | `PRAVILA_STATUSOV`, `REVIZIJSKA_SLED` |
 | **FR-POR-01 — Pregled stanja točk** | prikaz skupnega števila točk, trenutnega statusa, napredka do naslednjega statusa, datuma naslednjega izračuna | **Nadzorna plošča** | `CLANI`, `TRANSAKCIJE_TOCK`, `STATUSI_CLANOV` |
-| **FR-POR-02 — Pregled zneskov nakupov** | prikaz mesečnih zneskov nakupov, pridobljenih točk in statusa po obdobjih | ni eksplicitno navedeno | `MESECNI_NAKUPI`, `TRANSAKCIJE_TOCK`, `STATUSI_CLANOV` |
+| **FR-POR-02 — Pregled zneskov nakupov** | prikaz mesečnih zneskov nakupov, pridobljenih točk in statusa po obdobjih | **Nadzorna plošča** ali ločen pogled nakupov | `MESECNI_NAKUPI`, `TRANSAKCIJE_TOCK`, `STATUSI_CLANOV` |
 | **FR-POR-03 — Pregled kataloga nagrad** | pregled nagrad, opis nagrade, potrebno število točk, razpoložljivost, kategorija | **Katalog nagrad** | `NAGRADE` |
 | **FR-POR-04 — Koriščenje točk za nagrade** | izbira nagrade, naročilo nagrade, odštevanje točk, potrditev koriščenja | **Katalog nagrad** | `NAGRADE`, `TRANSAKCIJE_TOCK`, `CLANI` |
-| **FR-POR-05 — Večjezična podpora** | izbira jezika ob registraciji, sprememba jezika v profilu/portalu, prikaz portala v SL in EN | **Registracija**, **Profil** | `CLANI` |
+| **FR-POR-05 — Večjezična podpora** | izbira jezika ob registraciji, sprememba jezika v profilu ali portalu, prikaz portala v SL in EN | **Registracija**, **Profil** | `CLANI` |
 | **FR-ADM-01 — Pregled statusov strank** | pregled statusov vseh strank, filtriranje po obdobju, statusu, abecedi in regiji | **Pregled strank** | `CLANI`, `STATUSI_CLANOV` |
 | **FR-ADM-02 — Pregled statistike nakupov** | pregled povprečnega zneska nakupa po statusu, porazdelitev članov po statusih, mesečni trend rasti, skupno število dodeljenih in koriščenih točk | **Statistike** | `MESECNI_NAKUPI`, `STATUSI_CLANOV`, `TRANSAKCIJE_TOCK`, `CLANI` |
-| **FR-ADM-03 — Poljubne poizvedbe po podatkovni bazi** | izvajanje parametriziranih poizvedb samo za branje prek grafičnega vmesnika | **Poizvedbe** | `CLANI`, `STATUSI_CLANOV`, `TRANSAKCIJE_TOCK`, `MESECNI_NAKUPI`, `NAGRADE`, `PRAVILA_TOCK`, `PRAVILA_STATUSOV`, `REVIZIJSKA_SLED` |
+| **FR-ADM-03 — Poljubne poizvedbe po podatkovni bazi** | izvajanje parametriziranih poizvedb samo za branje prek grafičnega vmesnika | **Poizvedbe** | `CLANI`, `UPORABNISKE_RACUNE`, `KARTICE_LOJALNOSTI`, `STATUSI_CLANOV`, `TRANSAKCIJE_TOCK`, `MESECNI_NAKUPI`, `NAGRADE`, `PRAVILA_TOCK`, `PRAVILA_STATUSOV`, `REVIZIJSKA_SLED` |
 | **FR-ADM-04 — Upravljanje kataloga nagrad** | dodajanje, urejanje in brisanje nagrad, nastavljanje vrednosti nagrade v točkah, upravljanje zalog in razpoložljivosti, označevanje aktivnih ali neaktivnih nagrad | **Katalog nagrad** | `NAGRADE` |
 | **FR-ADM-05 — Upravljanje pravil točkovanja in statusov** | urejanje vrednosti v tabeli točkovanja, urejanje mejnih vrednosti za prehajanje med statusi, beleženje sprememb pravil | **Upravljanje pravil** | `PRAVILA_TOCK`, `PRAVILA_STATUSOV`, `REVIZIJSKA_SLED` |
-| **FR-ADM-06 — Upravljanje uporabniških računov članov** | iskanje članov po e-naslovu, imenu ali membership ID, pregled celotne zgodovine točk in statusov člana, ročno zaklepanje ali odklepanje računa, ručna prilagoditev točk z utemeljitvijo | **Pregled strank**, **Posamezna stranka** | `CLANI`, `UPORABNISKE_RACUNE`, `TRANSAKCIJE_TOCK`, `STATUSI_CLANOV`, `REVIZIJSKA_SLED` |
-| **FR-INT-01 — Pridobivanje podatkov o nakupih** | redno mesečno pridobivanje agregatnih podatkov o nakupih, pridobivanje za določen mesec in seznam membership ID-jev, sprožitev mesečnega izračuna po pridobitvi vseh podatkov | ni eksplicitno navedeno | `MESECNI_NAKUPI`, `CLANI` |
+| **FR-ADM-06 — Upravljanje uporabniških računov članov** | iskanje članov po e-poštnem naslovu, imenu ali membership ID, pregled celotne zgodovine točk in statusov člana, ročno zaklepanje ali odklepanje računa, ročna prilagoditev točk z utemeljitvijo | **Pregled strank**, **Posamezna stranka** | `CLANI`, `UPORABNISKE_RACUNE`, `TRANSAKCIJE_TOCK`, `STATUSI_CLANOV`, `REVIZIJSKA_SLED` |
+| **FR-INT-01 — Pridobivanje podatkov o nakupih** | redno mesečno pridobivanje agregatnih podatkov o nakupih, pridobivanje za določen mesec in seznam membership ID-jev, sprožitev mesečnega izračuna po pridobitvi vseh podatkov | Backend proces / brez neposredne UI maske | `MESECNI_NAKUPI`, `CLANI` |
 
 ---
+
 ## 11. Reference
 
 1. **IEEE Std 830-1998** — IEEE Recommended Practice for Software Requirements Specifications
 2. **ISO/IEC/IEEE 29148:2018** — Systems and software engineering: Life cycle processes – Requirements engineering
-3. **Uredba (EU) 2016/679 (GDPR)** — Splošna uredba o varstvu podatkov, Uradni list EU, 2016
-4. **Oracle Database Documentation** — https://docs.oracle.com/en/database/
-5. **OWASP Top 10 (2021)** — Smernice za varnost spletnih aplikacij — https://owasp.org/Top10/
-6. **Loyalty Program Trends 2026 Report** — Open Loyalty, 2025 — https://www.openloyalty.io/insider/loyalty-software-trends
-7. **37 Loyalty Program Best Practices** — Antavo, 2024 — https://antavo.com/blog/loyalty-program-best-practices/
-8. **RFC 7519** — JSON Web Token (JWT) — IETF, 2015
-9. **RFC 8446** — The Transport Layer Security (TLS) Protocol Version 1.3 — IETF, 2018
-
----
-
+3. **Uredba (EU) 2016/679 (GDPR)** — Splošna uredba o varstvu podatkov
+4. **Oracle Database Documentation**
+5. **OWASP Top 10**
+6. **RFC 7519** — JSON Web Token
+7. **RFC 8446** — TLS 1.3
