@@ -821,15 +821,9 @@ Sistem mora pošiljati naslednja avtomatizirana e-poštna obvestila:
 
 ---
 
-## 6. Diagram primerov uporabe
-
-Datoteka diagrama primerov uporabe: `diagram.png`
-
+## 6. Diagram primerov uporabe <p align="center"> <img src="diagram.png" alt="Use case diagram" width="1000"> </p>
 ---
-
-## 7. Funkcionalna dekompozicija
-
-Datoteka funkcionalne dekompozicije: `fundediag.png`
+## 7. Funkcionalna dekompozicija <p align="center"> <img src="fundediag.png" alt="Funkcionalna dekompozicija" width="1000"> </p>
 
 ---
 
