@@ -963,6 +963,11 @@ erDiagram
 ```
 ---
 ## 9. Reference
+Zaslonske maske —
+https://www.figma.com/make/1sIGmKPonaS92cMfcvy1et/Zaslonske-maske-za-projekt?fullscreen=1&t=2mY39sFObiXI8Cgc-1
+
+---
+## 10. Reference
 
 1. **IEEE Std 830-1998** — IEEE Recommended Practice for Software Requirements Specifications
 2. **ISO/IEC/IEEE 29148:2018** — Systems and software engineering: Life cycle processes – Requirements engineering
