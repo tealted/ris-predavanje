@@ -962,12 +962,48 @@ erDiagram
   }
 ```
 ---
-## 9. Reference
+## 9. Zaslonske Maske
 Zaslonske maske —
 https://www.figma.com/make/1sIGmKPonaS92cMfcvy1et/Zaslonske-maske-za-projekt?fullscreen=1&t=2mY39sFObiXI8Cgc-1
 
 ---
-## 10. Reference
+
+
+## 10. Sledljivost zahtev → funkcije → zaslonske maske → tabele podatkovnega modela
+
+| Zahteva | Funkcije od te zahteve | Zaslonske maske | Tabele podatkovnega modela |
+|---|---|---|---|
+| **FR-REG-01 — Spletna registracija** | vnos osebnih podatkov, preverjanje enoličnosti e-naslova, ustvarjanje neaktivnega računa, pošiljanje aktivacijske povezave, aktivacija računa, dodelitev membership ID, sprožitev tiskanja in pošiljanja kartice | **Registracija** | `CLANI`, `UPORABNISKE_RACUNE`, `KARTICE_LOJALNOSTI` |
+| **FR-REG-02 — Verifikacija e-naslova** | pošiljanje verifikacijske e-pošte, generiranje enkratnega žetona, aktivacija računa po kliku, beleženje časa in IP verifikacije | **Registracija** | `UPORABNISKE_RACUNE` |
+| **FR-REG-03 — Prijava v sistem** | preverjanje e-naslova in gesla, primerjava bcrypt hash, ustvarjanje sejnega žetona JWT, zaklep računa po 5 neuspešnih prijavah | **Prijava** | `UPORABNISKE_RACUNE` |
+| **FR-REG-04 — Upravljanje profila** | posodobitev naslova, posodobitev telefonske številke, nastavitve obveščanja | **Profil** | `CLANI` |
+| **FR-REG-05 — Pozabljeno geslo** | zahteva za ponastavitev gesla, pošiljanje enkratne povezave za ponastavitev | **Prijava** | `UPORABNISKE_RACUNE` |
+| **FR-PTS-01 — Mesečni izračun točk** | pridobivanje mesečnega zneska nakupov, posodobitev statusa pred izračunom, dodelitev točk po točkovniku, beleženje dodelitve, prištevanje k stanju točk | ni eksplicitno navedeno | `MESECNI_NAKUPI`, `PRAVILA_TOCK`, `PRAVILA_STATUSOV`, `TRANSAKCIJE_TOCK`, `STATUSI_CLANOV`, `CLANI` |
+| **FR-PTS-02 — Koriščenje točk** | preverjanje zadostnega stanja točk, odštevanje točk, evidenca koriščenja, sprožitev zagotovitve nagrade | **Katalog nagrad** | `TRANSAKCIJE_TOCK`, `NAGRADE`, `CLANI` |
+| **FR-PTS-03 — Pregled zgodovine točk** | prikaz zgodovine pridobivanja in koriščenja točk, prikaz datuma, vrste transakcije, števila točk, opisa in skupnega stanja | **Zgodovina točk** | `TRANSAKCIJE_TOCK`, `CLANI` |
+| **FR-STS-01 — Začetni status** | dodelitev začetnega statusa Osnovni ob registraciji | ni eksplicitno navedeno | `CLANI`, `STATUSI_CLANOV` |
+| **FR-STS-02 — Prehod v status Srebrni** | preverjanje mesečnega praga za prehod v Srebrni status, posodobitev statusa | **Nadzorna plošča**, **Posamezna stranka** | `STATUSI_CLANOV`, `MESECNI_NAKUPI`, `PRAVILA_STATUSOV`, `CLANI` |
+| **FR-STS-03 — Prehod v status Zlati** | preverjanje pogoja dveh mesecev nad pragom po pridobitvi Srebrnega statusa, posodobitev statusa | **Nadzorna plošča**, **Posamezna stranka** | `STATUSI_CLANOV`, `MESECNI_NAKUPI`, `PRAVILA_STATUSOV`, `CLANI` |
+| **FR-STS-04 — Ohranjanje statusa Srebrni** | preverjanje minimalnega zneska za ohranitev Srebrnega statusa, degradacija v Bronasti status po dveh zaporednih mesecih pod pragom | **Nadzorna plošča**, **Posamezna stranka** | `STATUSI_CLANOV`, `MESECNI_NAKUPI`, `PRAVILA_STATUSOV`, `CLANI` |
+| **FR-STS-05 — Ohranjanje statusa Zlati** | preverjanje minimalnega zneska za ohranitev Zlatega statusa, opozorilo po prvem neizpolnjenem mesecu, degradacija v Srebrni status po drugem | **Nadzorna plošča**, **Posamezna stranka** | `STATUSI_CLANOV`, `MESECNI_NAKUPI`, `PRAVILA_STATUSOV`, `CLANI` |
+| **FR-STS-06 — Status Bronasti in izhod iz njega** | vodenje Bronastega statusa, prehod v Srebrni po dveh zaporednih mesecih ≥ 200 EUR, vrnitev v Osnovni ob nakupu pod 50 EUR | **Nadzorna plošča**, **Posamezna stranka** | `STATUSI_CLANOV`, `MESECNI_NAKUPI`, `PRAVILA_STATUSOV`, `CLANI` |
+| **FR-STS-07 — Vrstni red operacij pri mesečnem izračunu** | pridobitev zneska nakupov, najprej posodobitev statusa, nato dodelitev točk po novem statusu | ni eksplicitno navedeno | `MESECNI_NAKUPI`, `STATUSI_CLANOV`, `PRAVILA_STATUSOV`, `PRAVILA_TOCK`, `TRANSAKCIJE_TOCK` |
+| **FR-STS-08 — Nastavljiva pravila statusov** | nastavljanje pragov za prehajanje med statusi prek administrativnega vmesnika | **Upravljanje pravil** | `PRAVILA_STATUSOV`, `REVIZIJSKA_SLED` |
+| **FR-POR-01 — Pregled stanja točk** | prikaz skupnega števila točk, trenutnega statusa, napredka do naslednjega statusa, datuma naslednjega izračuna | **Nadzorna plošča** | `CLANI`, `TRANSAKCIJE_TOCK`, `STATUSI_CLANOV` |
+| **FR-POR-02 — Pregled zneskov nakupov** | prikaz mesečnih zneskov nakupov, pridobljenih točk in statusa po obdobjih | ni eksplicitno navedeno | `MESECNI_NAKUPI`, `TRANSAKCIJE_TOCK`, `STATUSI_CLANOV` |
+| **FR-POR-03 — Pregled kataloga nagrad** | pregled nagrad, opis nagrade, potrebno število točk, razpoložljivost, kategorija | **Katalog nagrad** | `NAGRADE` |
+| **FR-POR-04 — Koriščenje točk za nagrade** | izbira nagrade, naročilo nagrade, odštevanje točk, potrditev koriščenja | **Katalog nagrad** | `NAGRADE`, `TRANSAKCIJE_TOCK`, `CLANI` |
+| **FR-POR-05 — Večjezična podpora** | izbira jezika ob registraciji, sprememba jezika v profilu/portalu, prikaz portala v SL in EN | **Registracija**, **Profil** | `CLANI` |
+| **FR-ADM-01 — Pregled statusov strank** | pregled statusov vseh strank, filtriranje po obdobju, statusu, abecedi in regiji | **Pregled strank** | `CLANI`, `STATUSI_CLANOV` |
+| **FR-ADM-02 — Pregled statistike nakupov** | pregled povprečnega zneska nakupa po statusu, porazdelitev članov po statusih, mesečni trend rasti, skupno število dodeljenih in koriščenih točk | **Statistike** | `MESECNI_NAKUPI`, `STATUSI_CLANOV`, `TRANSAKCIJE_TOCK`, `CLANI` |
+| **FR-ADM-03 — Poljubne poizvedbe po podatkovni bazi** | izvajanje parametriziranih poizvedb samo za branje prek grafičnega vmesnika | **Poizvedbe** | `CLANI`, `STATUSI_CLANOV`, `TRANSAKCIJE_TOCK`, `MESECNI_NAKUPI`, `NAGRADE`, `PRAVILA_TOCK`, `PRAVILA_STATUSOV`, `REVIZIJSKA_SLED` |
+| **FR-ADM-04 — Upravljanje kataloga nagrad** | dodajanje, urejanje in brisanje nagrad, nastavljanje vrednosti nagrade v točkah, upravljanje zalog in razpoložljivosti, označevanje aktivnih ali neaktivnih nagrad | **Katalog nagrad** | `NAGRADE` |
+| **FR-ADM-05 — Upravljanje pravil točkovanja in statusov** | urejanje vrednosti v tabeli točkovanja, urejanje mejnih vrednosti za prehajanje med statusi, beleženje sprememb pravil | **Upravljanje pravil** | `PRAVILA_TOCK`, `PRAVILA_STATUSOV`, `REVIZIJSKA_SLED` |
+| **FR-ADM-06 — Upravljanje uporabniških računov članov** | iskanje članov po e-naslovu, imenu ali membership ID, pregled celotne zgodovine točk in statusov člana, ročno zaklepanje ali odklepanje računa, ručna prilagoditev točk z utemeljitvijo | **Pregled strank**, **Posamezna stranka** | `CLANI`, `UPORABNISKE_RACUNE`, `TRANSAKCIJE_TOCK`, `STATUSI_CLANOV`, `REVIZIJSKA_SLED` |
+| **FR-INT-01 — Pridobivanje podatkov o nakupih** | redno mesečno pridobivanje agregatnih podatkov o nakupih, pridobivanje za določen mesec in seznam membership ID-jev, sprožitev mesečnega izračuna po pridobitvi vseh podatkov | ni eksplicitno navedeno | `MESECNI_NAKUPI`, `CLANI` |
+
+---
+## 11. Reference
 
 1. **IEEE Std 830-1998** — IEEE Recommended Practice for Software Requirements Specifications
 2. **ISO/IEC/IEEE 29148:2018** — Systems and software engineering: Life cycle processes – Requirements engineering
@@ -981,4 +1017,3 @@ https://www.figma.com/make/1sIGmKPonaS92cMfcvy1et/Zaslonske-maske-za-projekt?ful
 
 ---
 
-*Dokument pripravljen na podlagi opisa problema trgovske verige Maestro. Specifikacija je usklajena s standardom IEEE 830 / ISO/IEC/IEEE 29148:2018 in upošteva sodobne dobre prakse razvoja programov lojalnosti.*
