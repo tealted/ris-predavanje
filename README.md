@@ -1051,8 +1051,155 @@ Zaslonske maske:
 | **FR-INT-01 — Pridobivanje podatkov o nakupih** | redno mesečno pridobivanje agregatnih podatkov o nakupih, pridobivanje za določen mesec in seznam membership ID-jev, sprožitev mesečnega izračuna po pridobitvi vseh podatkov | Backend proces / brez neposredne UI maske | `MESECNI_NAKUPI`, `CLANI` |
 
 ---
+## 12. Načrt izvedbe in metodologija razvoja
 
-## 11. Reference
+### 12.1 Osnovne predpostavke
+
+Projekt razvoja sistema IS Lojalnost Maestro bo trajal **12 mesecev** in ga bo izvajala ekipa **5 članov**. Razvoj bo potekal iterativno, z več zaporednimi izdajami funkcionalnosti.
+
+Predvidenih je **5 večjih izdaj**, ki postopoma gradijo sistem od osnovne infrastrukture do produkcijske rešitve.
+
+---
+
+### 12.2 Organizacija ekipe
+
+| Vloga | Odgovornosti |
+|---|---|
+| Vodja projekta / Product Owner | upravljanje zahtev, planiranje, prioritizacija |
+| Scrum Master | organizacija dela, odstranjevanje ovir |
+| Backend razvijalec | poslovna logika, API, integracije |
+| Frontend razvijalec | uporabniški vmesnik |
+| QA / DevOps | testiranje, CI/CD, deployment |
+
+Zaradi manjše ekipe posamezni člani pokrivajo več vlog.
+
+---
+
+### 12.3 Razvojni pristop
+
+Uporabljen bo **Scrum (agilni razvoj)**.
+
+Razvoj poteka v **sprintih**, kjer:
+- en sprint traja **2 tedna**
+- skupno približno **24 sprintov**
+
+Vsak sprint vključuje:
+- načrtovanje (Sprint Planning)
+- razvoj
+- dnevne sestanke (Daily Scrum)
+- pregled (Sprint Review)
+- retrospektivo
+
+---
+
+### 12.4 Struktura dela (Scrum proces)
+
+- **Product Backlog**: seznam vseh zahtev (FR-*)
+- **Sprint Backlog**: izbrane naloge za posamezen sprint
+- **Daily Scrum**: dnevni 15-min sestanek
+- **Sprint Review**: predstavitev funkcionalnosti
+- **Retrospektiva**: izboljšave procesa
+
+Naloga je zaključena ("Done"), ko:
+- je implementirana
+- je testirana
+- deluje brez napak
+- je pripravljena za izdajo
+
+---
+
+### 12.5 Faze projekta
+
+| Faza | Trajanje | Opis |
+|---|---|---|
+| Analiza in planiranje | 1. mesec | zahteve, plan |
+| Arhitektura | 2. mesec | baza, sistemska zasnova |
+| Razvoj | 3.–10. mesec | implementacija funkcionalnosti |
+| Testiranje | 11. mesec | integracija, testi |
+| Zaključek | 12. mesec | stabilizacija, release |
+
+---
+
+### 12.6 Načrt izdaj (Releases)
+
+#### Izdaja 1 — Osnova sistema (Sprint 1–4)
+- arhitektura
+- baza
+- osnovni backend in frontend
+
+#### Izdaja 2 — Uporabniški račun (Sprint 5–8)
+- registracija
+- prijava
+- verifikacija e-pošte
+- profil
+
+#### Izdaja 3 — Jedro lojalnosti (Sprint 9–14)
+- točke
+- statusi
+- pregled točk
+- zgodovina
+
+#### Izdaja 4 — Administracija (Sprint 15–18)
+- pregled strank
+- nagrade
+- pravila
+- statistike
+
+#### Izdaja 5 — Zaključek (Sprint 19–24)
+- integracija s poslovnim IS
+- testiranje
+- optimizacija
+- produkcijska verzija
+
+---
+
+### 12.7 Časovni pregled
+
+| Mesec | Aktivnosti |
+|---|---|
+| 1–2 | analiza, arhitektura |
+| 3–4 | uporabniški račun |
+| 5–7 | točke in statusi |
+| 8–9 | administracija |
+| 10–12 | integracija, testiranje |
+
+---
+
+### 12.8 Testiranje
+
+Testiranje poteka skozi celoten projekt:
+- enotski testi
+- integracijski testi
+- sistemski testi
+- varnostni testi
+- obremenitveni testi
+
+---
+
+### 12.9 Tveganja
+
+| Tveganje | Rešitev |
+|---|---|
+| spremembe zahtev | iterativni razvoj |
+| integracija z IS | zgodnje testiranje |
+| majhna ekipa | deljeno znanje |
+| varnost | redni pregledi |
+
+---
+
+### 12.10 Končni rezultat
+
+Na koncu projekta sistem vključuje:
+- strankarski portal
+- administrativni portal
+- točke in statuse
+- katalog nagrad
+- integracijo s poslovnim IS
+- varnost in revizijsko sled
+
+Sistem je pripravljen za produkcijsko uporabo.
+---
+## 12. Reference
 
 1. **IEEE Std 830-1998** — IEEE Recommended Practice for Software Requirements Specifications
 2. **ISO/IEC/IEEE 29148:2018** — Systems and software engineering: Life cycle processes – Requirements engineering
