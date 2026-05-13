@@ -1199,7 +1199,427 @@ Na koncu projekta sistem vključuje:
 
 Sistem je pripravljen za produkcijsko uporabo.
 ---
-## 12. Reference
+
+## 13. Predvideni backend API
+
+### 13.1 Namen API sloja
+
+Backend API predstavlja komunikacijo med frontendom in zaledjem. Omogoča:
+
+- upravljanje uporabnikov
+- avtentikacijo
+- delo s točkami in statusi
+- nagrade
+- administracijo
+- integracijo s poslovnim IS
+
+Format: JSON
+
+---
+
+### 13.2 Splošna pravila
+
+- Base URL: `/api/v1`
+- Avtentikacija: Bearer JWT
+- Čas: ISO 8601
+
+Napaka:
+
+```json
+{
+  "napaka": "Neveljavni podatki",
+  "koda": "VALIDATION_ERROR"
+}
+```
+
+---
+
+## 13.3 AUTH API
+
+### POST `/auth/register`
+
+**Request:**
+
+```json
+{
+  "ime": "Ana",
+  "priimek": "Novak",
+  "email": "ana@email.si",
+  "telefon": "031123456",
+  "naslov": "Ljubljana",
+  "datum_rojstva": "1998-04-12",
+  "geslo": "Test123!",
+  "jezik": "sl",
+  "obvescanje_email": true,
+  "obvescanje_sms": false
+}
+```
+
+**Response:**
+
+```json
+{
+  "sporocilo": "Registracija uspešna",
+  "membership_id": "MST-001"
+}
+```
+
+---
+
+### POST `/auth/login`
+
+**Request:**
+
+```json
+{
+  "email": "ana@email.si",
+  "geslo": "Test123!"
+}
+```
+
+**Response:**
+
+```json
+{
+  "access_token": "jwt",
+  "refresh_token": "jwt",
+  "uporabnik": {
+    "clan_id": 1,
+    "status": "Srebrni"
+  }
+}
+```
+
+---
+
+### POST `/auth/forgot-password`
+
+**Request:**
+
+```json
+{
+  "email": "ana@email.si"
+}
+```
+
+**Response:**
+
+```json
+{
+  "sporocilo": "Email poslan"
+}
+```
+
+---
+
+## 13.4 MEMBER API
+
+### GET `/member/me`
+
+**Response:**
+
+```json
+{
+  "clan_id": 1,
+  "membership_id": "MST-001",
+  "ime": "Ana",
+  "priimek": "Novak",
+  "email": "ana@email.si",
+  "trenutni_status": "Srebrni",
+  "skupne_tocke": 240
+}
+```
+
+---
+
+### PUT `/member/me`
+
+**Request:**
+
+```json
+{
+  "telefon": "041999888",
+  "naslov": "Maribor",
+  "jezik": "en"
+}
+```
+
+**Response:**
+
+```json
+{
+  "sporocilo": "Profil posodobljen"
+}
+```
+
+---
+
+### GET `/member/points`
+
+**Response:**
+
+```json
+{
+  "skupne_tocke": 240,
+  "status": "Srebrni",
+  "napredek": 75
+}
+```
+
+---
+
+### GET `/member/points/history`
+
+**Response:**
+
+```json
+{
+  "transakcije": [
+    {
+      "datum": "2026-03-01",
+      "tocke": 15,
+      "tip": "DODELITEV"
+    }
+  ]
+}
+```
+
+---
+
+### GET `/member/purchases`
+
+**Response:**
+
+```json
+{
+  "nakupi": [
+    {
+      "mesec": "2026-02",
+      "znesek": 540
+    }
+  ]
+}
+```
+
+---
+
+## 13.5 REWARDS API
+
+### GET `/rewards`
+
+**Response:**
+
+```json
+{
+  "nagrade": [
+    {
+      "id": 1,
+      "naziv": "Bon 10€",
+      "tocke": 100
+    }
+  ]
+}
+```
+
+---
+
+### GET `/rewards/{id}`
+
+**Response:**
+
+```json
+{
+  "id": 1,
+  "naziv": "Bon 10€",
+  "opis": "Popust",
+  "tocke": 100
+}
+```
+
+---
+
+### POST `/member/redeem`
+
+**Request:**
+
+```json
+{
+  "nagrada_id": 1
+}
+```
+
+**Response:**
+
+```json
+{
+  "sporocilo": "Uspešno koriščenje",
+  "novo_stanje": 140
+}
+```
+
+---
+
+## 13.6 ADMIN API
+
+### GET `/admin/members`
+
+**Response:**
+
+```json
+{
+  "clani": [
+    {
+      "id": 1,
+      "ime": "Ana",
+      "status": "Srebrni"
+    }
+  ]
+}
+```
+
+---
+
+### GET `/admin/members/{id}`
+
+**Response:**
+
+```json
+{
+  "clan": {
+    "id": 1,
+    "ime": "Ana"
+  },
+  "tocke": [],
+  "nakupi": []
+}
+```
+
+---
+
+### POST `/admin/members/{id}/adjust-points`
+
+**Request:**
+
+```json
+{
+  "tocke": 20,
+  "razlog": "bonus"
+}
+```
+
+**Response:**
+
+```json
+{
+  "sporocilo": "Posodobljeno"
+}
+```
+
+---
+
+## 13.7 RULES API
+
+### GET `/admin/rules/points`
+
+**Response:**
+
+```json
+{
+  "pravila": []
+}
+```
+
+---
+
+### PUT `/admin/rules/points/{id}`
+
+**Request:**
+
+```json
+{
+  "tocke": 10
+}
+```
+
+**Response:**
+
+```json
+{
+  "sporocilo": "OK"
+}
+```
+
+---
+
+## 13.8 STATS API
+
+### GET `/admin/stats`
+
+**Response:**
+
+```json
+{
+  "clani": 1000,
+  "tocke": 20000
+}
+```
+
+---
+
+## 13.9 INTEGRATION API
+
+### POST `/integration/purchases/import`
+
+**Request:**
+
+```json
+{
+  "mesec": "2026-02",
+  "podatki": [
+    {
+      "membership_id": "MST-001",
+      "znesek": 540
+    }
+  ]
+}
+```
+
+**Response:**
+
+```json
+{
+  "uvozeno": 1
+}
+```
+
+---
+
+### POST `/integration/monthly-processing`
+
+**Response:**
+
+```json
+{
+  "status": "zaključeno"
+}
+```
+
+---
+
+## 13.10 Povzetek
+
+| Skupina | Namen |
+|---|---|
+| auth | prijava |
+| member | uporabnik |
+| rewards | nagrade |
+| admin | upravljanje |
+| rules | pravila |
+| stats | statistika |
+| integration | IS |
+
+---
+## 14. Reference
 
 1. **IEEE Std 830-1998** — IEEE Recommended Practice for Software Requirements Specifications
 2. **ISO/IEC/IEEE 29148:2018** — Systems and software engineering: Life cycle processes – Requirements engineering
